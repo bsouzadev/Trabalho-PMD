@@ -1,7 +1,8 @@
 package src.com.hotel;
 
-public class Progama {
+public class Programa {
     public static void main(String[] args) {
         
     }
 }
+    

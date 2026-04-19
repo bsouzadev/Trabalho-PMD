@@ -7,11 +7,10 @@ public abstract class Hospede extends Entidade_opcional {
     
     protected String nome;
     protected int idade;
-    protected int cpf;
+    protected String cpf;
     protected static ArrayList<Hospede> banco = new ArrayList<>();
     
-    
-    public Hospede (String nome, int idade, int cpf, int id){
+    public Hospede (String nome, int idade, String cpf, int id){
        
         super(id);
         this.nome = nome;
@@ -20,6 +19,7 @@ public abstract class Hospede extends Entidade_opcional {
         
     }
     // --------------------------------- MÉTODOS SOBRESCRITOS DE ENTIDADE --------------------------------- //
+    @Override
     public boolean salvar(){
 
         if(this.persistido){
@@ -32,6 +32,7 @@ public abstract class Hospede extends Entidade_opcional {
 
     }
 
+    @Override
     public boolean atualizar(){
 
         if(!this.persistido){
@@ -48,6 +49,7 @@ public abstract class Hospede extends Entidade_opcional {
         return false;
     }
 
+    @Override
     public boolean apagar(int id){
      for (Hospede h : banco) {
             if (h.id == id) {
@@ -59,8 +61,8 @@ public abstract class Hospede extends Entidade_opcional {
         return false;
     }
     
-
-    public boolean carregar(){
+    @Override
+    public boolean carregar(int id){
         for (Hospede h : banco) {
             if (h.id == id) {
                 this.nome = h.nome;
@@ -75,6 +77,7 @@ public abstract class Hospede extends Entidade_opcional {
 
     }
 
+    @Override
     public List<Hospede> carregarTodos() {
         
         return banco;
@@ -86,7 +89,7 @@ public abstract class Hospede extends Entidade_opcional {
     
     // --------------------------------- GETTERS DE HOSPEDE --------------------------------- //
     
-    public int getCpf() {
+    public String getCpf() {
         return cpf;
     }
 
@@ -104,7 +107,7 @@ public abstract class Hospede extends Entidade_opcional {
 
     // --------------------------------- SETTERS DE HOSPEDE --------------------------------- //
     
-    public void setCpf(int cpf) {
+    public void setCpf(String cpf) {
         this.cpf = cpf;
     }
 
@@ -121,10 +124,11 @@ public abstract class Hospede extends Entidade_opcional {
     public abstract boolean Pagante();
     
     // --------------------------------- TOSTRING DE HOSPEDE --------------------------------- //
-    
+
+    @Override
     public String toString() {
 
-        return "Nome: "+nome+"Idade: "+idade+"CPF: "+cpf;
+        return "Nome: "+nome+", Idade: "+idade+", CPF: "+cpf;
 
     }
 }

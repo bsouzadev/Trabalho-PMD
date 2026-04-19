@@ -2,10 +2,11 @@ package src.com.hotel.modelo;
 
 public class HospedeNormal extends Hospede{
 
-    public HospedeNormal(String nome, int idade, int cpf, int id){
+    public HospedeNormal(String nome, int idade, String cpf, int id){
         super(nome, idade, cpf, id);
     }
 
+    @Override
     public boolean Pagante(){
 
         return false;

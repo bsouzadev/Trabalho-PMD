@@ -9,10 +9,12 @@ public abstract class Entidade_opcional {
     //
     public Entidade_opcional() {
         this.id = 0;
+        this.persistido = false;
     }
 
     public Entidade_opcional(int id) {
         this.id = id;
+        this.persistido = false;
     }
 
     //
@@ -28,7 +30,7 @@ public abstract class Entidade_opcional {
     
     public abstract boolean salvar();
     public abstract boolean atualizar();
-    public abstract boolean carregar();
+    public abstract boolean carregar(int id);
     public abstract boolean apagar(int id);
     public abstract List<?> carregarTodos();
        

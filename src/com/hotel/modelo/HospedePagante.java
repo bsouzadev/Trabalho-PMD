@@ -2,14 +2,14 @@ package src.com.hotel.modelo;
 
 public class HospedePagante extends Hospede{
     
-    protected int numero_cartao;
-    protected int cvv;
-    protected int data_vencimento;
-    protected int telefone;
+    protected String numero_cartao;
+    protected String cvv;
+    protected String data_vencimento;
+    protected String telefone;
     protected String email;
 
-    public HospedePagante(int numero_cartao, int cvv, int data_vencimento, int telefone,
-        String email, String nome, int idade, int cpf, int id){
+    public HospedePagante(String numero_cartao, String cvv, String data_vencimento, String telefone,
+        String email, String nome, int idade, String cpf, int id){
             
             super(nome, idade, cpf, id);
             this.numero_cartao =  numero_cartao;
@@ -22,19 +22,19 @@ public class HospedePagante extends Hospede{
 
     // --------------------------------- GETTERS --------------------------------- //
 
-    public int getNumeroCartao(){
+    public String getNumeroCartao(){
         return this.numero_cartao;
     }
 
-    public int getCvv(){
+    public String getCvv(){
         return this.cvv;
     }
 
-    public int getDataVencimento(){
+    public String getDataVencimento(){
         return this.data_vencimento;
     }
 
-    public int getTelefone(){
+    public String getTelefone(){
         return this.telefone;
     }
 
@@ -44,19 +44,19 @@ public class HospedePagante extends Hospede{
 
     // --------------------------------- SETTERS --------------------------------- //
 
-    public void setNumeroCartao(int numero_cartao){
+    public void setNumeroCartao(String numero_cartao){
         this.numero_cartao = numero_cartao;
     }
 
-    public void setCvv(int cvv){
+    public void setCvv(String cvv){
        this.cvv = cvv;
     }
 
-    public void setDataVencimento(int data_vencimento){
+    public void setDataVencimento(String data_vencimento){
        this.data_vencimento = data_vencimento;
     }
 
-    public void setTelefone(int telefone){
+    public void setTelefone(String telefone){
         this.telefone = telefone;
     }
 
@@ -66,6 +66,7 @@ public class HospedePagante extends Hospede{
 
     // --------------------------------- SOBRESCRITA DE HÓSPEDE --------------------------------- //
 
+    @Override
     public boolean Pagante(){
 
         return true;
