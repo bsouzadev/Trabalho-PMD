@@ -1,14 +1,18 @@
 package src.com.hotel.modelo;
+import java.time.YearMonth;
+import java.util.List;
+
+import src.com.hotel.visao.BancodeDados;
 
 public class HospedePagante extends Hospede{
     
     protected String numero_cartao;
-    protected String cvv;
-    protected String data_vencimento;
+    protected int cvv;
+    protected YearMonth data_vencimento;
     protected String telefone;
     protected String email;
 
-    public HospedePagante(String numero_cartao, String cvv, String data_vencimento, String telefone,
+    public HospedePagante(String numero_cartao, int cvv, YearMonth data_vencimento, String telefone,
         String email, String nome, int idade, String cpf, int id){
             
             super(nome, idade, cpf, id);
@@ -20,17 +24,92 @@ public class HospedePagante extends Hospede{
         
         }
 
+    // --------------------------------- SOBREESCRITA ENTIDADE ---------------------------------- //
+
+    public boolean salvar(){
+
+        if(this.persistido){
+            return false;
+        }
+        
+        BancodeDados.hospedes.add(this);
+        this.persistido = true;
+        return true;
+
+    }
+
+    @Override
+    public boolean atualizar(){
+
+        if(!this.persistido){
+            return false;
+        }
+        
+        for(int i = 0; i < BancodeDados.hospedes.size(); i++){
+            if(BancodeDados.hospedes.get(i).id == this.id){
+                BancodeDados.hospedes.set(i, this);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean apagar(int id){
+    
+        for (int i = 0; i < BancodeDados.hospedes.size(); i++) {
+            
+            if (BancodeDados.hospedes.get(i).id == id) {
+                
+                BancodeDados.hospedes.remove(i);
+                this.persistido = false;
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    @Override
+    public boolean carregar(int id){
+        for (Hospede h : BancodeDados.hospedes) {
+            if (h.id == id && h instanceof HospedePagante) {
+                HospedePagante hp = (HospedePagante) h;
+                this.nome = hp.nome;
+                this.idade = hp.idade;
+                this.cpf = hp.cpf;
+                this.id = hp.id;
+                this.numero_cartao = hp.numero_cartao;
+                this.cvv = hp.cvv;
+                this.data_vencimento = hp.data_vencimento;
+                this.telefone = hp.telefone;
+                this.email = hp.email;
+                this.persistido = true;
+                return true;
+            }
+        }
+        return false;
+
+    }
+
+    @Override
+    public List<Hospede> carregarTodos() {
+        
+        return BancodeDados.hospedes;
+
+    }
+
     // --------------------------------- GETTERS --------------------------------- //
 
     public String getNumeroCartao(){
         return this.numero_cartao;
     }
 
-    public String getCvv(){
+    public int getCvv(){
         return this.cvv;
     }
 
-    public String getDataVencimento(){
+    public YearMonth getDataVencimento(){
         return this.data_vencimento;
     }
 
@@ -48,11 +127,11 @@ public class HospedePagante extends Hospede{
         this.numero_cartao = numero_cartao;
     }
 
-    public void setCvv(String cvv){
+    public void setCvv(int cvv){
        this.cvv = cvv;
     }
 
-    public void setDataVencimento(String data_vencimento){
+    public void setDataVencimento(YearMonth data_vencimento){
        this.data_vencimento = data_vencimento;
     }
 
@@ -64,7 +143,7 @@ public class HospedePagante extends Hospede{
         this.email = email;
     }
 
-    // --------------------------------- SOBRESCRITA DE HÓSPEDE --------------------------------- //
+    // --------------------------------- SOBRESCRITA HOSPEDE --------------------------------- //
 
     @Override
     public boolean Pagante(){

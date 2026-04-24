@@ -2,6 +2,7 @@ package src.com.hotel.modelo;
 
 import java.util.Scanner;
 import src.com.hotel.modelo.*;
+import src.com.hotel.visao.BancodeDados;
 
 public class Menu {
     private static Scanner sc = new Scanner(System.in);
@@ -77,13 +78,19 @@ public class Menu {
         }
     }
 
-    private static void listarHospedes() {
+    /*private static void listarHospedes() {
         Hospede h = new HospedeNormal("", 0, "", 0);
 
         for (Hospede hospede : h.carregarTodos()) {
             System.out.println(hospede);
         }
-    }
+    }*/
+    
+    private static void listarHospedes() {
+        for (Hospede hospede : BancodeDados.hospedes) {
+            System.out.println(hospede);
+        }
+}
 
 
     // ---------------- MENU QUARTO ---------------- //

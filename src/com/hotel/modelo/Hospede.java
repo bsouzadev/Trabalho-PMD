@@ -2,13 +2,13 @@ package src.com.hotel.modelo;
 
 import java.util.ArrayList;
 import java.util.List;
+import src.com.hotel.visao.BancodeDados;
 
 public abstract class Hospede extends Entidade_opcional {
     
     protected String nome;
     protected int idade;
     protected String cpf;
-    protected static ArrayList<Hospede> banco = new ArrayList<>();
     
     public Hospede (String nome, int idade, String cpf, int id){
        
@@ -20,71 +20,12 @@ public abstract class Hospede extends Entidade_opcional {
     }
     // --------------------------------- MÉTODOS SOBRESCRITOS DE ENTIDADE --------------------------------- //
     @Override
-    public boolean salvar(){
-
-        if(this.persistido){
-            return false;
-        }
-        
-        banco.add(this);
-        this.persistido = true;
-        return true;
-
-    }
-
-    @Override
-    public boolean atualizar(){
-
-        if(!this.persistido){
-            return false;
-        }
-        
-        for(int i = 0; i < banco.size(); i++){
-            if (banco.get(i).id == this.id){
-                banco.set(i, this);
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    @Override
-    public boolean apagar(int id){
-     for (Hospede h : banco) {
-            if (h.id == id) {
-                banco.remove(h);
-                this.persistido = false;
-                return true;
-            }
-        }
-        return false;
-    }
     
-    @Override
-    public boolean carregar(int id){
-        for (Hospede h : banco) {
-            if (h.id == id) {
-                this.nome = h.nome;
-                this.idade = h.idade;
-                this.cpf = h.cpf;
-                this.id = h.id;
-                this.persistido = true;
-                return true;
-            }
-        }
-        return false;
-
-    }
-
-    @Override
-    public List<Hospede> carregarTodos() {
-        
-        return banco;
-
-    }
-
-
+    public abstract boolean salvar();
+    public abstract boolean atualizar();
+    public abstract boolean carregar(int id);
+    public abstract boolean apagar(int id);
+    public abstract List<?> carregarTodos();
 
     
     // --------------------------------- GETTERS DE HOSPEDE --------------------------------- //
@@ -102,7 +43,7 @@ public abstract class Hospede extends Entidade_opcional {
     }
 
     public ArrayList<Hospede> getBanco() {
-        return banco;
+        return BancodeDados.hospedes;
     }
 
     // --------------------------------- SETTERS DE HOSPEDE --------------------------------- //
