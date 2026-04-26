@@ -1,8 +1,7 @@
 package src.com.hotel.modelo;
 
-import src.com.hotel.visao.BancoDeDados;
-
 import java.util.List;
+import src.com.hotel.visao.BancoDeDados;
 
 public abstract class Entidade {
     protected int id; // identificador

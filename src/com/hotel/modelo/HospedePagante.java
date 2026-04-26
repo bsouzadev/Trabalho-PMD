@@ -1,7 +1,6 @@
 package src.com.hotel.modelo;
 import java.time.YearMonth;
 import java.util.List;
-
 import src.com.hotel.visao.BancoDeDados;
 
 public class HospedePagante extends Hospede{
