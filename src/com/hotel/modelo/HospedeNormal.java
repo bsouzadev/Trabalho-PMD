@@ -2,7 +2,7 @@ package src.com.hotel.modelo;
 
 import java.util.List;
 
-import src.com.hotel.visao.BancodeDados;
+import src.com.hotel.visao.BancoDeDados;
 
 public class HospedeNormal extends Hospede{
 
@@ -19,7 +19,7 @@ public class HospedeNormal extends Hospede{
             return false;
         }
         
-        BancodeDados.hospedes.add(this);
+        BancoDeDados.hospedes.add(this);
         this.persistido = true;
         return true;
 
@@ -32,9 +32,9 @@ public class HospedeNormal extends Hospede{
             return false;
         }
         
-        for(int i = 0; i < BancodeDados.hospedes.size(); i++){
-            if(BancodeDados.hospedes.get(i).id == this.id){
-                BancodeDados.hospedes.set(i, this);
+        for(int i = 0; i < BancoDeDados.hospedes.size(); i++){
+            if(BancoDeDados.hospedes.get(i).id == this.id){
+                BancoDeDados.hospedes.set(i, this);
                 return true;
             }
         }
@@ -45,11 +45,11 @@ public class HospedeNormal extends Hospede{
     @Override
     public boolean apagar(int id){
         
-        for (int i = 0; i < BancodeDados.hospedes.size(); i++) {
+        for (int i = 0; i < BancoDeDados.hospedes.size(); i++) {
             
-            if (BancodeDados.hospedes.get(i).id == id) {
+            if (BancoDeDados.hospedes.get(i).id == id) {
                 
-                BancodeDados.hospedes.remove(i);
+                BancoDeDados.hospedes.remove(i);
                 this.persistido = false;
                 return true;
     }
@@ -59,7 +59,7 @@ public class HospedeNormal extends Hospede{
     
     @Override
     public boolean carregar(int id){
-        for (Hospede h : BancodeDados.hospedes) {
+        for (Hospede h : BancoDeDados.hospedes) {
             if (h.id == id && h instanceof HospedeNormal) {
                 this.nome = h.nome;
                 this.idade = h.idade;
@@ -76,7 +76,7 @@ public class HospedeNormal extends Hospede{
     @Override
     public List<Hospede> carregarTodos() {
         
-        return BancodeDados.hospedes;
+        return BancoDeDados.hospedes;
 
     }
 

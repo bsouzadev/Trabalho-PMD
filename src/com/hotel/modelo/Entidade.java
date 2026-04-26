@@ -1,6 +1,6 @@
 package src.com.hotel.modelo;
 
-import src.com.hotel.visao.BancodeDados;
+import src.com.hotel.visao.BancoDeDados;
 
 import java.util.List;
 
@@ -34,7 +34,7 @@ public abstract class Entidade {
             return false;
         }
 
-        BancodeDados.SalvaEntidades.add(this);
+        BancoDeDados.SalvaEntidades.add(this);
 
         persistido = true;
         return true;
@@ -43,9 +43,9 @@ public abstract class Entidade {
     public boolean atualizar(){ //pega os dados que já estão dentro desse objeto, e atualiza na persistência.
         if(!persistido) return false;
 
-        for (int i =0; i <BancodeDados.SalvaEntidades.size(); i++){
-            if(BancodeDados.SalvaEntidades.get(i).getId() == this.id){
-                BancodeDados.SalvaEntidades.set(i, this);
+        for (int i = 0; i < BancoDeDados.SalvaEntidades.size(); i++){
+            if(BancoDeDados.SalvaEntidades.get(i).getId() == this.id){
+                BancoDeDados.SalvaEntidades.set(i, this);
                 return true;
             }
         }
@@ -54,9 +54,9 @@ public abstract class Entidade {
     }
 
     public boolean apagar(int id){
-        for (int i = 0; i < BancodeDados.SalvaEntidades.size(); i++) {
-            if(BancodeDados.SalvaEntidades.get(i).getId() == id){
-                BancodeDados.SalvaEntidades.remove(i);
+        for (int i = 0; i < BancoDeDados.SalvaEntidades.size(); i++) {
+            if(BancoDeDados.SalvaEntidades.get(i).getId() == id){
+                BancoDeDados.SalvaEntidades.remove(i);
                 persistido = false;
                 return true;
             }
@@ -66,9 +66,9 @@ public abstract class Entidade {
     }
 
     public boolean carregar(int id){
-        for (int i = 0; i < BancodeDados.SalvaEntidades.size(); i++) {
-            if(BancodeDados.SalvaEntidades.get(i).getId() == id){
-                System.out.println(BancodeDados.SalvaEntidades.get(i));
+        for (int i = 0; i < BancoDeDados.SalvaEntidades.size(); i++) {
+            if(BancoDeDados.SalvaEntidades.get(i).getId() == id){
+                System.out.println(BancoDeDados.SalvaEntidades.get(i));
                 return true;
             }
         }

@@ -1,8 +1,8 @@
 package src.com.hotel.modelo;
 
 import java.util.Scanner;
-import src.com.hotel.modelo.*;
-import src.com.hotel.visao.BancodeDados;
+
+import src.com.hotel.visao.BancoDeDados;
 
 public class Menu {
     private static Scanner sc = new Scanner(System.in);
@@ -87,7 +87,7 @@ public class Menu {
     }*/
     
     private static void listarHospedes() {
-        for (Hospede hospede : BancodeDados.hospedes) {
+        for (Hospede hospede : BancoDeDados.hospedes) {
             System.out.println(hospede);
         }
 }

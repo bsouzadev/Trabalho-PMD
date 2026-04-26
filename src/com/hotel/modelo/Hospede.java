@@ -2,7 +2,7 @@ package src.com.hotel.modelo;
 
 import java.util.ArrayList;
 import java.util.List;
-import src.com.hotel.visao.BancodeDados;
+import src.com.hotel.visao.BancoDeDados;
 
 public abstract class Hospede extends Entidade {
     
@@ -43,7 +43,7 @@ public abstract class Hospede extends Entidade {
     }
 
     public ArrayList<Hospede> getBanco() {
-        return BancodeDados.hospedes;
+        return BancoDeDados.hospedes;
     }
 
     // --------------------------------- SETTERS DE HOSPEDE --------------------------------- //
