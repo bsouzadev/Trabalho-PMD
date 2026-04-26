@@ -1,7 +1,5 @@
 package src.com.hotel.visao;
 import java.util.ArrayList;
-
-
 import src.com.hotel.modelo.Entidade;
 import src.com.hotel.modelo.Hospede;
 import src.com.hotel.modelo.Quarto;

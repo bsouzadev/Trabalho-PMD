@@ -2,13 +2,12 @@ package src.com.hotel.modelo;
 
 import java.util.ArrayList;
 import java.util.List;
+import src.com.hotel.visao.BancoDeDados;
 
 public class Reserva extends Entidade { //classe de transação
     protected Hospede hospede;
-    protected Quarto quarto;
     protected String data_entrada;
     protected String data_saida;
-    protected static ArrayList <Reserva> banco_reservas = new ArrayList<>();
     protected ArrayList<InformacoesReserva> info_reserva = new ArrayList<>();
 
     // ------------------------------- CONSTRUTOR ------------------------------ //
@@ -40,7 +39,7 @@ public class Reserva extends Entidade { //classe de transação
         if (this.persistido) {
             return false;
         }
-        banco_reservas.add(this);
+        BancoDeDados.reservas.add(this);
         this.persistido = true;
         return true;
     }
@@ -50,9 +49,9 @@ public class Reserva extends Entidade { //classe de transação
         if (!this.persistido) {
             return false;
         }
-        for (int i=0; i< banco_reservas.size(); i++) {
-            if (banco_reservas.get(i).id == this.id) {
-                banco_reservas.set(i, this);
+        for (int i=0; i< BancoDeDados.reservas.size(); i++) {
+            if (BancoDeDados.reservas.get(i).id == this.id) {
+                BancoDeDados.reservas.set(i, this);
                 return true;
             }
         }
@@ -61,8 +60,8 @@ public class Reserva extends Entidade { //classe de transação
 
     @Override
     public boolean carregar(int id) {
-        for (int i=0; i<banco_reservas.size(); i++) {
-            Reserva reserva = banco_reservas.get(i);
+        for (int i=0; i<BancoDeDados.reservas.size(); i++) {
+            Reserva reserva = BancoDeDados.reservas.get(i);
             if (reserva.id == id) {
                 this.id = id;
                 this.hospede = reserva.hospede;
@@ -78,10 +77,10 @@ public class Reserva extends Entidade { //classe de transação
 
     @Override
     public boolean apagar(int id) {
-        for (int i=0; i<banco_reservas.size(); i++) {
-            if (banco_reservas.get(i).id == id) {
-                banco_reservas.get(i).persistido = false;
-                banco_reservas.remove(i);
+        for (int i=0; i<BancoDeDados.reservas.size(); i++) {
+            if (BancoDeDados.reservas.get(i).id == id) {
+                BancoDeDados.reservas.get(i).persistido = false;
+                BancoDeDados.reservas.remove(i);
                 return true;
             }
         }
@@ -90,7 +89,7 @@ public class Reserva extends Entidade { //classe de transação
 
     @Override
     public List<Reserva> carregarTodos() {
-        return banco_reservas;
+        return new ArrayList<>(BancoDeDados.reservas);
     }
     // -------------------------------- GETTERS -------------------------------- //
 
@@ -107,7 +106,22 @@ public class Reserva extends Entidade { //classe de transação
     }
 
     public List<InformacoesReserva> getInfoReserva () {
-        return info_reserva;
+        return new ArrayList<>(info_reserva);
+    }
+
+    // -------------------------------- SETTERS -------------------------------- //
+
+    public void setHospede(Hospede hospede) {
+        this.hospede = hospede;
+    }
+    public void setData_entrada(String data_entrada) {
+        this.data_entrada = data_entrada;
+    }
+    public void setData_saida(String data_saida) {
+        this.data_saida = data_saida;
+    }
+    public void setInfoReserva (ArrayList<InformacoesReserva> info_reserva) {
+        this.info_reserva = info_reserva;
     }
     // -------------------------------- ToString -------------------------------- //
 

@@ -2,13 +2,12 @@ package src.com.hotel.modelo;
 
 import java.util.ArrayList;
 import java.util.List;
+import src.com.hotel.visao.BancoDeDados;
 
 public class Quarto extends Entidade {
-    protected Reserva reserva;
     protected int numero_quarto;
     protected String qualidade;
     protected double preco;
-    protected static ArrayList<Quarto> banco_quartos = new ArrayList<>();
 
     public Quarto (int numero_quarto, String qualidade, double preco, int id) {
         super(id);
@@ -22,7 +21,7 @@ public class Quarto extends Entidade {
         if (this.persistido) {
             return false;
         }
-        banco_quartos.add(this);
+        BancoDeDados.quartos.add(this);
         this.persistido = true;
         return true;
     }
@@ -32,9 +31,9 @@ public class Quarto extends Entidade {
         if (!this.persistido) {
             return false;
         }
-        for (int i=0; i< banco_quartos.size(); i++) {
-            if (banco_quartos.get(i).id == this.id) {
-                banco_quartos.set(i, this);
+        for (int i=0; i< BancoDeDados.quartos.size(); i++) {
+            if (BancoDeDados.quartos.get(i).id == this.id) {
+                BancoDeDados.quartos.set(i, this);
                 return true;
             }
         }
@@ -43,8 +42,8 @@ public class Quarto extends Entidade {
 
     @Override
     public boolean carregar(int id) {
-        for (int i=0; i<banco_quartos.size(); i++) {
-            Quarto quarto = banco_quartos.get(i);
+        for (int i=0; i<BancoDeDados.quartos.size(); i++) {
+            Quarto quarto = BancoDeDados.quartos.get(i);
             if (quarto.id == id) {
                 this.id = id;
                 this.numero_quarto = quarto.numero_quarto;
@@ -59,10 +58,10 @@ public class Quarto extends Entidade {
 
     @Override
     public boolean apagar(int id) {
-        for (int i=0; i<banco_quartos.size(); i++) {
-            if (banco_quartos.get(i).id == id) {
-                banco_quartos.get(i).persistido = false;
-                banco_quartos.remove(i);
+        for (int i=0; i<BancoDeDados.quartos.size(); i++) {
+            if (BancoDeDados.quartos.get(i).id == id) {
+                BancoDeDados.quartos.get(i).persistido = false;
+                BancoDeDados.quartos.remove(i);
                 return true;
             }
         }
@@ -71,7 +70,7 @@ public class Quarto extends Entidade {
 
     @Override
     public List<Quarto> carregarTodos() {
-        return banco_quartos;
+        return new ArrayList<>(BancoDeDados.quartos);
     }
     
     // --------------------------------- GETTERS --------------------------------- //
