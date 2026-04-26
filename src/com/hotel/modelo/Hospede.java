@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import src.com.hotel.visao.BancodeDados;
 
-public abstract class Hospede extends Entidade_opcional {
+public abstract class Hospede extends Entidade {
     
     protected String nome;
     protected int idade;

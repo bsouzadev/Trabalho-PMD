@@ -1,16 +1,20 @@
 package src.com.hotel.modelo;
 
-public class Entidade {
-    private int id; // identificador
-    private boolean persistido; // informa se o objeto já foi salvo anteriormente.
+import java.util.List;
+
+public abstract class Entidade {
+    protected int id; // identificador
+    protected boolean persistido; // informa se o objeto já foi salvo anteriormente.
 
     //
     public Entidade() {
-
+        this.id = 0;
+        this.persistido = false;
     }
 
     public Entidade(int id) {
         this.id = id;
+        this.persistido = false;
     }
 
     //
@@ -22,22 +26,17 @@ public class Entidade {
         this.id = id;
     }
 
-    //
-    public boolean salvar(){
-        if(persistido){
-            return false;
-        }
-
-
-        persistido = true;
-        return true;
-    }
+    // METODOS ABSTRATOS - NECESSÁRIO SOBRESCRITA
     
-    //
+    public abstract boolean salvar();
+    public abstract boolean atualizar();
+    public abstract boolean carregar(int id);
+    public abstract boolean apagar(int id);
+    public abstract List<?> carregarTodos();
+
+
     @Override
     public String toString() {
-
-        return "Id = " + id;
+        return "Id = " + getId();
     }
-
 }

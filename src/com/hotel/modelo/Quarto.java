@@ -3,7 +3,7 @@ package src.com.hotel.modelo;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Quarto extends Entidade_opcional {
+public class Quarto extends Entidade {
     protected int numero_quarto;
     protected String qualidade;
     protected double preco;
