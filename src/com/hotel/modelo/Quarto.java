@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Quarto extends Entidade {
+    protected Reserva reserva;
     protected int numero_quarto;
     protected String qualidade;
     protected double preco;

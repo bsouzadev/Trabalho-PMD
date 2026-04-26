@@ -3,8 +3,9 @@ package src.com.hotel.modelo;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Reserva extends Entidade {
+public class Reserva extends Entidade { //classe de transação
     protected Hospede hospede;
+    protected Quarto quarto;
     protected String data_entrada;
     protected String data_saida;
     protected static ArrayList <Reserva> banco_reservas = new ArrayList<>();
