@@ -40,7 +40,7 @@ public abstract class Entidade {
         return true;
     }
 
-    public boolean atualizar(){
+    public boolean atualizar(){ //pega os dados que já estão dentro desse objeto, e atualiza na persistência.
         if(!persistido) return false;
 
         for (int i =0; i <BancodeDados.SalvaEntidades.size(); i++){
@@ -68,7 +68,7 @@ public abstract class Entidade {
     public boolean carregar(int id){
         for (int i = 0; i < BancodeDados.SalvaEntidades.size(); i++) {
             if(BancodeDados.SalvaEntidades.get(i).getId() == id){
-                System.out.println(BancodeDados.SalvaEntidades.toString());
+                System.out.println(BancodeDados.SalvaEntidades.get(i));
                 return true;
             }
         }
@@ -77,6 +77,7 @@ public abstract class Entidade {
     }
 
     public abstract List<?> carregarTodos(); //Retorna uma lista com todos os registros daquela entidade armazenados na persistência. Se não houver nenhum, a lista retornada será vazia.
+
     //
     @Override
     public String toString() {
