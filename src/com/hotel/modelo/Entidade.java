@@ -1,5 +1,7 @@
 package src.com.hotel.modelo;
 
+import src.com.hotel.visao.BancodeDados;
+
 import java.util.List;
 
 public abstract class Entidade {
@@ -26,15 +28,56 @@ public abstract class Entidade {
         this.id = id;
     }
 
-    // METODOS ABSTRATOS - NECESSÁRIO SOBRESCRITA
-    
-    public abstract boolean salvar();
-    public abstract boolean atualizar();
-    public abstract boolean carregar(int id);
-    public abstract boolean apagar(int id);
-    public abstract List<?> carregarTodos();
+    //
+    public boolean salvar(){ //salva na persistência = classe banco de dados.
+        if(persistido){
+            return false;
+        }
 
+        BancodeDados.SalvaEntidades.add(this);
 
+        persistido = true;
+        return true;
+    }
+
+    public boolean atualizar(){
+        if(!persistido) return false;
+
+        for (int i =0; i <BancodeDados.SalvaEntidades.size(); i++){
+            if(BancodeDados.SalvaEntidades.get(i).getId() == this.id){
+                BancodeDados.SalvaEntidades.set(i, this);
+                return true;
+            }
+        }
+
+        return false; //não encontrou o id na lista (o id possivelmente não existe).
+    }
+
+    public boolean apagar(int id){
+        for (int i = 0; i < BancodeDados.SalvaEntidades.size(); i++) {
+            if(BancodeDados.SalvaEntidades.get(i).getId() == id){
+                BancodeDados.SalvaEntidades.remove(i);
+                persistido = false;
+                return true;
+            }
+        }
+
+        return false; //não encontrou o id na lista (o id possivelmente não existe).
+    }
+
+    public boolean carregar(int id){
+        for (int i = 0; i < BancodeDados.SalvaEntidades.size(); i++) {
+            if(BancodeDados.SalvaEntidades.get(i).getId() == id){
+                System.out.println(BancodeDados.SalvaEntidades.toString());
+                return true;
+            }
+        }
+
+        return false; //não encontrou o id na lista (o id possivelmente não existe).
+    }
+
+    public abstract List<?> carregarTodos(); //Retorna uma lista com todos os registros daquela entidade armazenados na persistência. Se não houver nenhum, a lista retornada será vazia.
+    //
     @Override
     public String toString() {
         return "Id = " + getId();
