@@ -32,7 +32,7 @@ public abstract class Hospede extends Entidade {
         return nome;
     }
 
-    public ArrayList<Hospede> getBanco() {
+    public ArrayList<Hospede> getBanco() { //cadastra um hospedes
         return BancoDeDados.hospedes;
     }
 
@@ -52,7 +52,7 @@ public abstract class Hospede extends Entidade {
 
     // --------------------------------- ABSTRATA (VERIFICA PAGANTE) --------------------------------- //
 
-    public abstract boolean Pagante();
+    public abstract boolean Pagante(); //para as classes filhas.
     
     // --------------------------------- TOSTRING DE HOSPEDE --------------------------------- //
 

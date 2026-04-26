@@ -1,22 +1,25 @@
-package src.com.hotel.modelo;
+package src.com.hotel.visao;
 
+import java.util.List;
 import java.util.Scanner;
 
+import src.com.hotel.modelo.*;
 import src.com.hotel.visao.BancoDeDados;
 
 public class Menu {
     private static Scanner sc = new Scanner(System.in);
+    private int opMenu;
 
     // ---------------- MENU PRINCIPAL ---------------- //
     public static void MenuPrincipal() {
-        int opcao;
+        int opcao = 1;
 
         while (opcao != 0) {
             System.out.println("\n----- SISTEMA HOTEL -----");
-            System.out.println("0 - Sair");
-            System.out.println("1 - Hospede");
-            System.out.println("2 - Quarto");
-            System.out.println("3 - Reserva");
+            System.out.println("Digite 0 para: Sair");
+            System.out.println("Digite 1 para: Se Hospedar");
+            System.out.println("Digite 2 para: Quarto"); //O que seria quarto !?
+            System.out.println("Digite 3 para: Fazer uma reserva");
             System.out.print("Escolha: ");
 
             opcao = sc.nextInt();
@@ -43,9 +46,9 @@ public class Menu {
 
         while (opcao != 0) {
             System.out.println("\n--- HOSPEDE ---");
-            System.out.println("0 - Voltar");
-            System.out.println("1 - Inserir");
-            System.out.println("2 - Listar");
+            System.out.println("Digite 0 para: Voltar");
+            System.out.println("Digite 1 para: Inserir");
+            System.out.println("Digite 2 para: Listar");
 
             opcao = sc.nextInt();
 
@@ -100,9 +103,9 @@ public class Menu {
 
         do {
             System.out.println("\n=== QUARTO ===");
-            System.out.println("1 - Inserir");
-            System.out.println("2 - Listar");
-            System.out.println("0 - Voltar");
+            System.out.println("Digite 1 para: - Inserir");
+            System.out.println("Digite 2 para: - Listar");
+            System.out.println("Digite 0 para: - Voltar");
 
             opcao = sc.nextInt();
 
@@ -151,9 +154,93 @@ public class Menu {
 
     // ---------------- MENU RESERVA ---------------- //
 
+    public void menuReserva(){
+        int opMenu;
 
+        while (true){
+            System.out.println("==== RESERVA ====");
+            System.out.println("Digite 1 para: Criar reserva");
+            System.out.println("Digite 2 para: Ver todas as reservas");
+            System.out.println("Digite 3 para: Buscar por uma reserva");
+            System.out.println("Digite 4 para: Apagar uma reserva");
+            System.out.println("Digite 0 para: Sair");
 
+            opMenu = sc.nextInt();
 
+            if(opMenu == 1){
+                reserva();
+            } else if(opMenu == 2){
+                listarReservas();
+            } else if(opMenu == 3){
+                buscarReserva(sc);
+            } else if(opMenu == 4){
+                apagaReserva(sc);
+            } else {
+                break;
+            }
 
+        }
+    }
+
+    public void reserva(){
+        System.out.println("Digite o seu nome:");
+        String nome = sc.nextLine();
+        System.out.println("Digite sua idade:");
+        int idade = sc.nextInt();
+        System.out.println("Digite seu CPF:");
+        String cpf = sc.nextLine();
+        System.out.println("Digite o id:");
+        int id = sc.nextInt();
+        System.out.println("Digite o numero do cartao:");
+        String numCartao = sc.nextLine();
+        System.out.println("Digite o Cvv");
+        int cvv = sc.nextInt();
+        System.out.println("Digite a Data de vencimento:");
+        String vencimento = sc.nextLine();
+        System.out.println("Digite o seu Telefone:");
+        String telefone = sc.nextLine();
+        System.out.println("Digite o seu Email:");
+        String email = sc.nextLine();
+
+        HospedePagante hospede = new HospedePagante(numCartao, cvv, vencimento, telefone, email, nome, idade,cpf,id);
+        System.out.println("Por favor, informe a data de chegada e a data de saída desejadas");
+        Reserva reserva = new Reserva(hospede, sc.nextLine(), sc.nextLine(), id);
+    }
+
+    public void listarReservas() {
+        Reserva r = new Reserva(null, "", "", 0);
+
+        List<Reserva> lista = r.carregarTodos();
+
+        for (Reserva reserva : lista) {
+            System.out.println(reserva);
+        }
+    }
+
+    public void buscarReserva(Scanner sc) {
+        System.out.print("ID: ");
+        int id = sc.nextInt();
+
+        Reserva r = new Reserva(null, "", "", 0);
+
+        if (r.carregar(id)) {
+            System.out.println(r);
+        } else {
+            System.out.println("Não encontrado.");
+        }
+    }
+
+    public void apagaReserva(Scanner sc){
+        System.out.println("Id: ");
+        int id = sc.nextInt();
+
+        Reserva r = new Reserva(null, "", "", 0);
+
+        if(r.apagar(id)){
+            System.out.println(r);
+        } else {
+            System.out.println("Não encontrado.");
+        }
+    }
 
 }
