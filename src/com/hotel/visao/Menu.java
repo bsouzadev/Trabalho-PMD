@@ -546,11 +546,19 @@ public class Menu {
                 }
     }
     public static LocalDate formata_localdate (String data) {
-        String partes[] = data.split("/");
-        int dia = Integer.parseInt(partes[0]);
-        int mes = Integer.parseInt(partes[1]);
-        int ano = Integer.parseInt(partes[2]);
-        return LocalDate.of(ano, mes, dia);
+        while (true) {
+            try {
+                String partes[] = data.split("/");
+                int dia = Integer.parseInt(partes[0]);
+                int mes = Integer.parseInt(partes[1]);
+                int ano = Integer.parseInt(partes[2]);
+                return LocalDate.of(ano, mes, dia);
+            } 
+            catch (Exception e) {
+                System.out.println("Data inválida! Use o formato DD/MM/YYYY");
+            }
+            data = sc.nextLine();
+        }
     }
 
     public static ArrayList<Quarto> quartosDisponiveis (LocalDate dtEntrada, LocalDate dtSaida) {
