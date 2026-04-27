@@ -6,11 +6,11 @@ public class HospedePagante extends Hospede{
     
     protected int numero_cartao;
     protected int cvv;
-    protected int data_vencimento;
-    protected int telefone;
+    protected String data_vencimento;
+    protected String telefone;
     protected String email;
 
-    public HospedePagante(int numero_cartao, int cvv, int data_vencimento, int telefone,
+    public HospedePagante(int numero_cartao, int cvv, String data_vencimento, String telefone,
         String email, String nome, int idade, String cpf, int id){
             
             super(nome, idade, cpf, id);
@@ -107,11 +107,11 @@ public class HospedePagante extends Hospede{
         return this.cvv;
     }
 
-    public int getDataVencimento(){
+    public String getDataVencimento(){
         return this.data_vencimento;
     }
 
-    public int getTelefone(){
+    public String getTelefone(){
         return this.telefone;
     }
 
@@ -129,11 +129,11 @@ public class HospedePagante extends Hospede{
        this.cvv = cvv;
     }
 
-    public void setDataVencimento(int data_vencimento){
+    public void setDataVencimento(String data_vencimento){
        this.data_vencimento = data_vencimento;
     }
 
-    public void setTelefone(int telefone){
+    public void setTelefone(String telefone){
         this.telefone = telefone;
     }
 

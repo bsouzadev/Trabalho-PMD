@@ -99,11 +99,11 @@ public class Menu {
         int cvv = sc.nextInt();
         sc.nextLine();
 
-        System.out.print("Data de vencimento (YYYY-MM): ");
-        int vencimento = sc.nextInt();
+        System.out.print("Data de vencimento (MM-AA): ");
+        String vencimento = sc.next();
 
         System.out.print("Telefone: ");
-        int tel = sc.nextInt();
+        String tel = sc.next();
         sc.nextLine();
 
         System.out.print("Email: ");
@@ -191,10 +191,10 @@ public class Menu {
             int cvv = sc.nextInt();
 
             System.out.print("Data de vencimento (YYYY-MM): ");
-            int vencimento = sc.nextInt();
+            String vencimento = sc.next();
 
             System.out.print("Telefone: ");
-            int tel = sc.nextInt();
+            String tel = sc.nextLine();
 
             System.out.print("Email: ");
             String email = sc.next();
@@ -231,7 +231,7 @@ public class Menu {
 
         Hospede h;
 
-        h = new HospedePagante(0, 0, 0, 0, "", "", 0, "", 0);
+        h = new HospedePagante(0, 0, "", "", "", "", 0, "", 0);
 
         if (!h.carregar(id)) {
             // se não achou, tenta como Normal
@@ -431,10 +431,10 @@ public class Menu {
         System.out.println("Digite o Cvv");
         int cvv = sc.nextInt();
         sc.nextLine();
-        System.out.print("Data de vencimento (YYYY-MM): ");
-        int vencimento = sc.nextInt();
+        System.out.print("Data de vencimento (DD/AA): ");
+        String vencimento = sc.next();
         System.out.println("Digite o seu Telefone:");
-        int telefone = sc.nextInt();
+        String telefone = sc.nextLine();
         sc.nextLine();
         System.out.println("Digite o seu Email:");
         String email = sc.nextLine();
