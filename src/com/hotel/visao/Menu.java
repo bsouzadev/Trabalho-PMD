@@ -4,6 +4,7 @@ import java.time.YearMonth;
 import java.util.List;
 import java.util.Scanner;
 import src.com.hotel.modelo.*;
+import src.com.hotel.modelo.Reserva;
 
 public class Menu {
     private static Scanner sc = new Scanner(System.in);
@@ -49,7 +50,7 @@ public class Menu {
             System.out.println("Digite 1 para: Inserir");
             System.out.println("Digite 2 para: Apagar");
             System.out.println("Digite 3 para: Atualizar");
-            System.out.println("Digite 4 para: Vizualizar por ID");
+            System.out.println("Digite 4 para: Visualizar por ID");
             System.out.println("Digite 5 para: Listar");
             System.out.print ("Escolha: ");
 
@@ -82,6 +83,7 @@ public class Menu {
 
         System.out.print("Idade: ");
         int idade = sc.nextInt();
+        sc.nextLine();
 
         System.out.print("CPF: ");
         String cpf = sc.next();
@@ -94,18 +96,19 @@ public class Menu {
 
         System.out.print("Código de Segurança: ");
         int cvv = sc.nextInt();
+        sc.nextLine();
 
         System.out.print("Data de vencimento (YYYY-MM): ");
-        String entrada = sc.next();
-        YearMonth data_vencimento = YearMonth.parse(entrada);
+        int entrada = sc.nextInt();
 
         System.out.print("Telefone: ");
         int tel = sc.nextInt();
+        sc.nextLine();
 
         System.out.print("Email: ");
         String email = sc.next();
 
-        Hospede h = new HospedePagante(cartao, cvv, data_vencimento, tel, email, nome, idade, cpf, id);
+        Hospede h = new HospedePagante(cartao, cvv, entrada, tel, email, nome, idade, cpf, id);
 
         if (h.salvar()) {
             System.out.println("Hospede salvo!");
@@ -187,8 +190,7 @@ public class Menu {
             int cvv = sc.nextInt();
 
             System.out.print("Data de vencimento (YYYY-MM): ");
-            String entrada = sc.next();
-            YearMonth data_vencimento = YearMonth.parse(entrada);
+            int entrada = sc.nextInt();
 
             System.out.print("Telefone: ");
             int tel = sc.nextInt();
@@ -198,7 +200,7 @@ public class Menu {
 
             hp.setNome(nome); hp.setIdade(idade); hp.setCpf(cpf);
             hp.setNumeroCartao(cartao); hp.setCvv(cvv);
-            hp.setDataVencimento(data_vencimento); hp.setTelefone(tel);
+            hp.setDataVencimento(entrada); hp.setTelefone(tel);
             hp.setEmail(email);
         
 
@@ -228,7 +230,7 @@ public class Menu {
 
         Hospede h;
 
-        h = new HospedePagante(0, 0, null, 0, "", "", 0, "", 0);
+        h = new HospedePagante(0, 0, 0, 0, "", "", 0, "", 0);
 
         if (!h.carregar(id)) {
             // se não achou, tenta como Normal
@@ -263,7 +265,7 @@ public class Menu {
             System.out.println("Digite 1 para: Inserir");
             System.out.println("Digite 2 para: Apagar");
             System.out.println("Digite 3 para: Atualizar");
-            System.out.println("Digite 4 para: Vizualizar por ID");
+            System.out.println("Digite 4 para: Visualizar por ID");
             System.out.println("Digite 5 para: Listar");
             System.out.print("Escolha: ");
 
@@ -388,9 +390,11 @@ public class Menu {
             System.out.println("Digite 2 para: Ver todas as reservas");
             System.out.println("Digite 3 para: Buscar por uma reserva");
             System.out.println("Digite 4 para: Apagar uma reserva");
-            System.out.println("Digite 0 para: Sair");
+            System.out.println("Digite 5 para: Alterar uma reserva");
+            System.out.println("Digite 0 para: Voltar");
 
             opMenu = sc.nextInt();
+            sc.nextLine();
 
             if(opMenu == 1){
                 reserva();
@@ -400,6 +404,8 @@ public class Menu {
                 buscarReserva(sc);
             } else if(opMenu == 4){
                 apagaReserva(sc);
+            } else if (opMenu == 5) {
+                atualizaReserva();
             } else {
                 break;
             }
@@ -410,7 +416,6 @@ public class Menu {
     public static void reserva(){
         
         System.out.println("Digite o seu nome:");
-        sc.nextLine();
         String nome = sc.nextLine();
         System.out.println("Digite sua idade:");
         int idade = sc.nextInt();
@@ -420,19 +425,19 @@ public class Menu {
         System.out.println("Digite o id:");
         int id = sc.nextInt();
         sc.nextLine();
-        System.out.println("Digite o numero do cartao:");
+        System.out.println("Digite o numero do cartão:");
         int numCartao = sc.nextInt();
         System.out.println("Digite o Cvv");
         int cvv = sc.nextInt();
         sc.nextLine();
         System.out.print("Data de vencimento (YYYY-MM): ");
-        String entrada = sc.next();
-        YearMonth data_vencimento = YearMonth.parse(entrada);
+        int entrada = sc.nextInt();
         System.out.println("Digite o seu Telefone:");
         int telefone = sc.nextInt();
+        sc.nextLine();
         System.out.println("Digite o seu Email:");
         String email = sc.nextLine();
-        HospedePagante hospede = new HospedePagante(numCartao, cvv, data_vencimento, telefone, email, nome, idade,cpf,id);
+        HospedePagante hospede = new HospedePagante(numCartao, cvv, entrada, telefone, email, nome, idade,cpf,id);
         System.out.println("Por favor, informe a data de chegada e a data de saída desejadas");
         Reserva reserva = new Reserva(hospede, sc.nextLine(), sc.nextLine(), id);
         reserva.salvar();
@@ -449,7 +454,7 @@ public class Menu {
     }
 
     public static void buscarReserva(Scanner sc) {
-        System.out.print("ID: ");
+        System.out.print("Informe o ID para buscar a reserva: ");
         int id = sc.nextInt();
 
         Reserva r = new Reserva(null, "", "", 0);
@@ -471,6 +476,33 @@ public class Menu {
             System.out.println(r);
         } else {
             System.out.println("Não encontrado.");
+        }
+    }
+
+    public static void atualizaReserva(){
+        System.out.println("Digite o ID da reserva: ");
+        int id = sc.nextInt();
+        sc.nextLine();
+
+        Reserva r = new Reserva(null, "", "", 0);
+
+        if (r.carregar(id)) {
+            System.out.print("Nova data de entrada: ");
+            String entrada = sc.nextLine();
+
+            System.out.print("Nova data de saída: ");
+            String saida = sc.nextLine();
+
+            r.setData_entrada(entrada);
+            r.setData_saida(saida);
+
+            if (r.atualizar()) {
+                System.out.println("Reserva atualizada com sucesso!");
+            } else {
+                System.out.println("Erro ao atualizar.");
+            }
+        } else {
+            System.out.println("Reserva não encontrada.");
         }
     }
 

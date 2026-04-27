@@ -1,5 +1,4 @@
 package src.com.hotel.modelo;
-import java.time.YearMonth;
 import java.util.List;
 import src.com.hotel.visao.BancoDeDados;
 
@@ -7,11 +6,11 @@ public class HospedePagante extends Hospede{
     
     protected int numero_cartao;
     protected int cvv;
-    protected YearMonth data_vencimento;
+    protected int data_vencimento;
     protected int telefone;
     protected String email;
 
-    public HospedePagante(int numero_cartao, int cvv, YearMonth data_vencimento, int telefone,
+    public HospedePagante(int numero_cartao, int cvv, int data_vencimento, int telefone,
         String email, String nome, int idade, String cpf, int id){
             
             super(nome, idade, cpf, id);
@@ -108,7 +107,7 @@ public class HospedePagante extends Hospede{
         return this.cvv;
     }
 
-    public YearMonth getDataVencimento(){
+    public int getDataVencimento(){
         return this.data_vencimento;
     }
 
@@ -130,7 +129,7 @@ public class HospedePagante extends Hospede{
        this.cvv = cvv;
     }
 
-    public void setDataVencimento(YearMonth data_vencimento){
+    public void setDataVencimento(int data_vencimento){
        this.data_vencimento = data_vencimento;
     }
 
