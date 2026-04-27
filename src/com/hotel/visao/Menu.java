@@ -1,7 +1,9 @@
 package src.com.hotel.visao;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Scanner;
 import src.com.hotel.modelo.*;
 import src.com.hotel.modelo.Reserva;
@@ -79,7 +81,8 @@ public class Menu {
 
         if(escolha == 1){
         System.out.print("Nome: ");
-        String nome = sc.next();
+        sc.nextLine();
+        String nome = sc.nextLine();
 
         System.out.print("Idade: ");
         int idade = sc.nextInt();
@@ -431,20 +434,52 @@ public class Menu {
         int cvv = sc.nextInt();
         sc.nextLine();
         System.out.print("Data de vencimento (YYYY-MM): ");
-        int entrada = sc.nextInt();
+        int vencimento = sc.nextInt();
         System.out.println("Digite o seu Telefone:");
         int telefone = sc.nextInt();
         sc.nextLine();
         System.out.println("Digite o seu Email:");
         String email = sc.nextLine();
-        HospedePagante hospede = new HospedePagante(numCartao, cvv, entrada, telefone, email, nome, idade,cpf,id);
-        System.out.println("Por favor, informe a data de chegada e a data de saída desejadas");
-        Reserva reserva = new Reserva(hospede, sc.nextLine(), sc.nextLine(), id);
+        HospedePagante hospede = new HospedePagante(numCartao, cvv, vencimento, telefone, email, nome, idade,cpf,id);
+        System.out.println("Por favor, informe a data de chegada e a data de saída desejadas, no formato DD/MM/YYYY");
+        LocalDate dtEntrada = formata_localdate(sc.nextLine());
+        LocalDate dtSaida = formata_localdate(sc.nextLine());
+        Reserva reserva = new Reserva(hospede, dtEntrada, dtSaida, id);
+        while (true) {
+            System.out.println("-----------------------------");
+            System.out.println ("QUARTOS DISPONÍVEIS PARA HOSPEDAGEM:");
+            ArrayList<Quarto> disponibilidadeQuartos = quartosDisponiveis(dtEntrada, dtSaida);
+            for (Quarto q : disponibilidadeQuartos) {
+                System.out.println (q);
+            }
+            System.out.print("Informe aqui o ID do quarto que deseja se hospedar: ([0] para sair) ");
+            int id_quarto = sc.nextInt();
+            if (id_quarto == 0) break;
+            System.out.print ("Qual sua previsão de estadia em dias? ");
+            int dias_estadia = sc.nextInt();
+            Quarto quartoEscolhido = new Quarto (0, "", 0, 0);
+            if (quartoEscolhido.carregar(id_quarto)) {
+                InformacoesReserva info = new InformacoesReserva(quartoEscolhido, dias_estadia);
+                reserva.adicionarInfoReserva(info);
+                System.out.println ("Reserva ao quarto " + id_quarto + " feita com sucesso!");
+                if(!reserva.salvar()) reserva.atualizar();
+                System.out.println("""
+                Deseja reservar algum outro quarto?\n
+                [0] SIM
+                [1] NÃO
+                """);
+                int escolhaFinalizada = sc.nextInt();
+                if (escolhaFinalizada==1) break;
+            } else {
+                System.out.println ("O quarto escolhido não existe! Escolha outro. ([0] para sair)");
+            }
+    
+        }
         reserva.salvar();
     }
 
     public static void listarReservas() {
-        Reserva r = new Reserva(null, "", "", 0);
+        Reserva r = new Reserva(null, null, null, 0);
 
         List<Reserva> lista = r.carregarTodos();
 
@@ -457,7 +492,7 @@ public class Menu {
         System.out.print("Informe o ID para buscar a reserva: ");
         int id = sc.nextInt();
 
-        Reserva r = new Reserva(null, "", "", 0);
+        Reserva r = new Reserva(null, null, null, 0);
 
         if (r.carregar(id)) {
             System.out.println(r);
@@ -470,7 +505,7 @@ public class Menu {
         System.out.println("Id: ");
         int id = sc.nextInt();
 
-        Reserva r = new Reserva(null, "", "", 0);
+        Reserva r = new Reserva(null, null, null, 0);
 
         if(r.apagar(id)){
             System.out.println(r);
@@ -484,17 +519,17 @@ public class Menu {
         int id = sc.nextInt();
         sc.nextLine();
 
-        Reserva r = new Reserva(null, "", "", 0);
+        Reserva r = new Reserva(null, null, null, 0);
 
         if (r.carregar(id)) {
             System.out.print("Nova data de entrada: ");
-            String entrada = sc.nextLine();
+            LocalDate dtEntrada = formata_localdate(sc.nextLine());
 
             System.out.print("Nova data de saída: ");
-            String saida = sc.nextLine();
+            LocalDate dtSaida = formata_localdate(sc.nextLine());
 
-            r.setData_entrada(entrada);
-            r.setData_saida(saida);
+            r.setData_entrada(dtEntrada);
+            r.setData_saida(dtSaida);
 
             if (r.atualizar()) {
                 System.out.println("Reserva atualizada com sucesso!");
@@ -504,6 +539,37 @@ public class Menu {
         } else {
             System.out.println("Reserva não encontrada.");
         }
+    }
+    public static LocalDate formata_localdate (String data) {
+        String partes[] = data.split("/");
+        int dia = Integer.parseInt(partes[0]);
+        int mes = Integer.parseInt(partes[1]);
+        int ano = Integer.parseInt(partes[2]);
+        return LocalDate.of(ano, mes, dia);
+    }
+
+    public static ArrayList<Quarto> quartosDisponiveis (LocalDate dtEntrada, LocalDate dtSaida) {
+        ArrayList <Quarto> quartosDisponiveis = new ArrayList<>();
+
+        for (Quarto quarto : BancoDeDados.quartos) {
+            boolean disponivel = true;
+            for (Reserva r : BancoDeDados.reservas) {
+                List <InformacoesReserva> info_tmp = r.getInfoReserva(); 
+                for (InformacoesReserva info_r : info_tmp) {
+                    if (info_r.getQuarto().getId() == quarto.getId()) {
+                        if (dtEntrada.isBefore(r.getData_saida()) && r.getData_entrada().isBefore(dtSaida)) {
+                            disponivel = false;
+                            break;
+                        } 
+                    }
+                }
+                if (!disponivel) break;
+            }
+            if (disponivel) {
+                quartosDisponiveis.add(quarto);
+            }
+        }
+        return quartosDisponiveis;
     }
 
 }

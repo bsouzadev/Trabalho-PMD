@@ -6,7 +6,7 @@ public class InformacoesReserva {
 
     public InformacoesReserva (Quarto quarto, int dias) {
         this.quarto = quarto;
-        this.dias = dias;
+        this.dias = 
     }
 
     public Quarto getQuarto () {

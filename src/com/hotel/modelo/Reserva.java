@@ -3,21 +3,25 @@ package src.com.hotel.modelo;
 import java.util.ArrayList;
 import java.util.List;
 import src.com.hotel.visao.BancoDeDados;
+import java.time.LocalDate;
 
 public class Reserva extends Entidade { //classe de transação
     protected Hospede hospede;
-    protected String data_entrada;
-    protected String data_saida;
+    protected LocalDate data_entrada;
+    protected LocalDate data_saida;
     protected ArrayList<InformacoesReserva> info_reserva = new ArrayList<>();
 
-    // ------------------------------- CONSTRUTOR ------------------------------ //
+    // ------------------------------- CONSTRUTOR ---------------------------- //--
 
-    public Reserva (Hospede hospede, String data_entrada, String data_saida, int id) {
+    public Reserva (Hospede hospede, LocalDate data_entrada, LocalDate data_saida, int id) {
         super(id);
         this.hospede = hospede;
         this.data_entrada = data_entrada;
         this.data_saida = data_saida;
+        this.info_reserva = info_reserva;
     }
+
+    // -----------------------MÉTODOS DA INTERMEDIÁRIA------------------------ //--
 
     public void adicionarInfoReserva (InformacoesReserva info) {
         info_reserva.add(info);
@@ -33,11 +37,20 @@ public class Reserva extends Entidade { //classe de transação
         return false;
     }
 
+    public void listarInfoReserva () {
+        for (InformacoesReserva i : info_reserva) {
+            System.out.println(i);
+        }
+    }
+
     // ------------------------------- SOBRESCRITAS ------------------------------ //
     @Override
     public boolean salvar() {
         if (this.persistido) {
             return false;
+        }
+        if (this.info_reserva.size() < 1) {
+            System.out.println ("Para fazer uma reserva, você deve antes adicionar as informações da reserva!");
         }
         BancoDeDados.reservas.add(this);
         this.persistido = true;
@@ -97,11 +110,11 @@ public class Reserva extends Entidade { //classe de transação
         return this.hospede;
     }
 
-    public String getData_entrada() {
+    public LocalDate getData_entrada() {
         return this.data_entrada;
     }
 
-    public String getData_saida() {
+    public LocalDate getData_saida() {
         return this.data_saida;
     }
 
@@ -114,10 +127,10 @@ public class Reserva extends Entidade { //classe de transação
     public void setHospede(Hospede hospede) {
         this.hospede = hospede;
     }
-    public void setData_entrada(String data_entrada) {
+    public void setData_entrada(LocalDate data_entrada) {
         this.data_entrada = data_entrada;
     }
-    public void setData_saida(String data_saida) {
+    public void setData_saida(LocalDate data_saida) {
         this.data_saida = data_saida;
     }
     public void setInfoReserva (ArrayList<InformacoesReserva> info_reserva) {
