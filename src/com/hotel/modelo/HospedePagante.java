@@ -5,13 +5,13 @@ import src.com.hotel.visao.BancoDeDados;
 
 public class HospedePagante extends Hospede{
     
-    protected String numero_cartao;
+    protected int numero_cartao;
     protected int cvv;
     protected YearMonth data_vencimento;
-    protected String telefone;
+    protected int telefone;
     protected String email;
 
-    public HospedePagante(String numero_cartao, int cvv, YearMonth data_vencimento, String telefone,
+    public HospedePagante(int numero_cartao, int cvv, YearMonth data_vencimento, int telefone,
         String email, String nome, int idade, String cpf, int id){
             
             super(nome, idade, cpf, id);
@@ -100,7 +100,7 @@ public class HospedePagante extends Hospede{
 
     // --------------------------------- GETTERS --------------------------------- //
 
-    public String getNumeroCartao(){
+    public int getNumeroCartao(){
         return this.numero_cartao;
     }
 
@@ -112,7 +112,7 @@ public class HospedePagante extends Hospede{
         return this.data_vencimento;
     }
 
-    public String getTelefone(){
+    public int getTelefone(){
         return this.telefone;
     }
 
@@ -122,7 +122,7 @@ public class HospedePagante extends Hospede{
 
     // --------------------------------- SETTERS --------------------------------- //
 
-    public void setNumeroCartao(String numero_cartao){
+    public void setNumeroCartao(int numero_cartao){
         this.numero_cartao = numero_cartao;
     }
 
@@ -134,7 +134,7 @@ public class HospedePagante extends Hospede{
        this.data_vencimento = data_vencimento;
     }
 
-    public void setTelefone(String telefone){
+    public void setTelefone(int telefone){
         this.telefone = telefone;
     }
 
@@ -149,6 +149,21 @@ public class HospedePagante extends Hospede{
 
         return true;
     
+    }
+
+     @Override
+    public String toString() {
+        
+        return String.format(
+        "%s\nCartão: %s\nCVV: %d\nVencimento: %s\nTelefone: %s\nEmail: %s",
+        super.toString(),
+        numero_cartao,
+        cvv,
+        data_vencimento,
+        telefone,
+        email
+    );
+        
     }
     
 }

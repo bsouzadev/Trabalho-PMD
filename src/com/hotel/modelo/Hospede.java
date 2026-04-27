@@ -1,8 +1,8 @@
 package src.com.hotel.modelo;
 
 import java.util.ArrayList;
-import java.util.List;
 import src.com.hotel.visao.BancoDeDados;
+
 
 public abstract class Hospede extends Entidade {
 
@@ -59,7 +59,11 @@ public abstract class Hospede extends Entidade {
     @Override
     public String toString() {
 
-        return "Nome: "+nome+", Idade: "+idade+", CPF: "+cpf;
+        return super.toString() + "\n" +
+           "Nome: " + nome + "\n" +
+           "Idade: " + idade + "\n" +
+           "CPF: " + cpf;
 
+    
     }
 }

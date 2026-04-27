@@ -1,5 +1,6 @@
 package src.com.hotel.visao;
 
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Scanner;
 import src.com.hotel.modelo.*;
@@ -46,7 +47,10 @@ public class Menu {
             System.out.println("\n--- HOSPEDE ---");
             System.out.println("Digite 0 para: Voltar");
             System.out.println("Digite 1 para: Inserir");
-            System.out.println("Digite 2 para: Listar");
+            System.out.println("Digite 2 para: Apagar");
+            System.out.println("Digite 3 para: Atualizar");
+            System.out.println("Digite 4 para: Vizualizar por ID");
+            System.out.println("Digite 5 para: Listar");
             System.out.print ("Escolha: ");
 
             opcao = sc.nextInt();
@@ -54,11 +58,62 @@ public class Menu {
             if (opcao == 1) {
                 inserirHospede();
             } else if (opcao == 2) {
+                apagarHospedes();
+            } else if (opcao == 3){
+                atualizarHospedes();
+            } else if (opcao == 4){
+                carregarHospedes();
+            } else if (opcao == 5){
                 listarHospedes();
             }
         }
     }
-    private static void inserirHospede() {
+   private static void inserirHospede() {
+        
+        System.out.println("Insira o tipo de Hóspede:");
+        System.out.println("Digite 1 para: Hóspede Pagante");
+        System.out.println("Digite 2 para: Hóspede Não Pagante");
+        
+        int escolha = sc.nextInt();
+
+        if(escolha == 1){
+        System.out.print("Nome: ");
+        String nome = sc.next();
+
+        System.out.print("Idade: ");
+        int idade = sc.nextInt();
+
+        System.out.print("CPF: ");
+        String cpf = sc.next();
+
+        System.out.print("ID: ");
+        int id = sc.nextInt();
+
+        System.out.print("Cartão: ");
+        int cartao = sc.nextInt();
+
+        System.out.print("Código de Segurança: ");
+        int cvv = sc.nextInt();
+
+        System.out.print("Data de vencimento (YYYY-MM): ");
+        String entrada = sc.next();
+        YearMonth data_vencimento = YearMonth.parse(entrada);
+
+        System.out.print("Telefone: ");
+        int tel = sc.nextInt();
+
+        System.out.print("Email: ");
+        String email = sc.next();
+
+        Hospede h = new HospedePagante(cartao, cvv, data_vencimento, tel, email, nome, idade, cpf, id);
+
+        if (h.salvar()) {
+            System.out.println("Hospede salvo!");
+        } else {
+            System.out.println("Erro ao salvar (X).");
+        }
+
+        } else if(escolha == 2){
         System.out.print("Nome: ");
         sc.nextLine();
         String nome = sc.nextLine();
@@ -80,15 +135,115 @@ public class Menu {
         } else {
             System.out.println("Erro ao salvar (X).");
         }
+        }
+        
     }
 
-    /*private static void listarHospedes() {
-        Hospede h = new HospedeNormal("", 0, "", 0);
+    private static void apagarHospedes(){
+        
+        System.out.println("Digite o ID: ");
+        int id = sc.nextInt();
 
-        for (Hospede hospede : h.carregarTodos()) {
-            System.out.println(hospede);
+        Hospede h = new HospedeNormal("", 0, "", 0); 
+
+        if (h.apagar(id)) {
+            System.out.println("Hóspede Removido com sucesso!");
+        } else {
+            System.out.println("Hóspede não encontrado.");
         }
-    }*/
+    
+    }
+
+    private static void atualizarHospedes(){
+        
+        System.out.print("Digite o ID: ");
+        int id = sc.nextInt();
+
+        Hospede h = null;
+
+        for (Hospede hospede : BancoDeDados.hospedes) {
+            if (hospede.getId() == id) {
+                h = hospede;
+                break;
+            }
+        }
+
+            System.out.print("Nome: ");
+            String nome = sc.next();
+
+            System.out.print("Idade: ");
+            int idade = sc.nextInt();
+
+            System.out.print("CPF: ");
+            String cpf = sc.next();
+
+    if (h instanceof HospedePagante) {
+            HospedePagante hp = (HospedePagante) h;
+
+            System.out.print("Cartão: ");
+            int cartao = sc.nextInt();
+
+            System.out.print("Código de Segurança: ");
+            int cvv = sc.nextInt();
+
+            System.out.print("Data de vencimento (YYYY-MM): ");
+            String entrada = sc.next();
+            YearMonth data_vencimento = YearMonth.parse(entrada);
+
+            System.out.print("Telefone: ");
+            int tel = sc.nextInt();
+
+            System.out.print("Email: ");
+            String email = sc.next();
+
+            hp.setNome(nome); hp.setIdade(idade); hp.setCpf(cpf);
+            hp.setNumeroCartao(cartao); hp.setCvv(cvv);
+            hp.setDataVencimento(data_vencimento); hp.setTelefone(tel);
+            hp.setEmail(email);
+        
+
+        if (h.atualizar()) {
+            System.out.println("Hóspede atualizado com sucesso!");
+        } else {
+            System.out.println("Erro ao atualizar.");
+        }
+
+    } else if (h instanceof HospedeNormal){
+        
+        h.setNome(nome); h.setIdade(idade); h.setCpf(cpf);
+
+        if (h.atualizar()) {
+            System.out.println("Hóspede atualizado com sucesso!");
+        } else {
+            System.out.println("Erro ao atualizar.");
+        }
+        
+    }
+}
+    
+    private static void carregarHospedes(){
+        
+        System.out.print("Digite o ID: ");
+        int id = sc.nextInt();
+
+        Hospede h;
+
+        h = new HospedePagante(0, 0, null, 0, "", "", 0, "", 0);
+
+        if (!h.carregar(id)) {
+            // se não achou, tenta como Normal
+            h = new HospedeNormal("", 0, "", 0);
+
+        if (!h.carregar(id)) {
+            System.out.println("Não encontrado.");
+            return;
+        }
+    }
+
+        System.out.println("Hóspede carregado com sucesso!");
+        System.out.println(h);
+}
+
     
     private static void listarHospedes() {
         for (Hospede hospede : BancoDeDados.hospedes) {
@@ -104,9 +259,12 @@ public class Menu {
 
         do {
             System.out.println("\n=== QUARTO ===");
-            System.out.println("Digite 1 para: - Inserir");
-            System.out.println("Digite 2 para: - Listar");
-            System.out.println("Digite 0 para: - Voltar");
+            System.out.println("Digite 0 para: Voltar");
+            System.out.println("Digite 1 para: Inserir");
+            System.out.println("Digite 2 para: Apagar");
+            System.out.println("Digite 3 para: Atualizar");
+            System.out.println("Digite 4 para: Vizualizar por ID");
+            System.out.println("Digite 5 para: Listar");
             System.out.print("Escolha: ");
 
             opcao = sc.nextInt();
@@ -116,6 +274,15 @@ public class Menu {
                     inserirQuarto();
                     break;
                 case 2:
+                    apagarQuartos();
+                    break;
+                case 3:
+                    atualizarQuartos();
+                    break;
+                case 4:
+                    carregarQuartos();
+                    break;
+                case 5:
                     listarQuartos();
                     break;
             }
@@ -143,6 +310,61 @@ public class Menu {
             System.out.println("Quarto salvo!");
         } else {
             System.out.println("Erro ao salvar.");
+        }
+    }
+
+    private static void apagarQuartos(){
+        System.out.println("Digite o ID: ");
+        int id = sc.nextInt();
+
+        Quarto q = new Quarto(0, "", 0.0, 0); 
+
+        if (q.apagar(id)) {
+            System.out.println("Quarto removido com sucesso!");
+        } else {
+            System.out.println("Quarto não encontrado.");
+        }
+    
+    }
+    private static void atualizarQuartos(){
+        System.out.println("Digite o ID: ");
+        int id = sc.nextInt();
+
+        Quarto q = new Quarto(0, "", 0.0, 0);
+
+        System.out.print("Numero: ");
+        int numero = sc.nextInt();
+        sc.nextLine();
+
+        System.out.print("Qualidade: ");
+        String qualidade = sc.next();
+
+        System.out.print("Preço: ");
+        double preco = sc.nextDouble();
+
+    if (q.carregar(id)) {
+
+        q.setNumero_quarto(numero);
+        q.setQualidade(qualidade);
+        q.setPreco(preco);
+
+         if(q.atualizar()) {
+            System.out.println("Quarto atualizado com sucesso!");
+        } else {
+            System.out.println("Quarto não encontrado.");
+        }
+        }
+    }
+    private static void carregarQuartos(){
+        System.out.println("Digite o ID: ");
+        int id = sc.nextInt();
+       
+        Quarto q = new Quarto(0, "", 0, 0);
+
+        if (q.carregar(id)) {
+            System.out.println(q);
+        }else{
+            System.out.println("Erro ao carregar Quarto");
         }
     }
 
@@ -186,6 +408,7 @@ public class Menu {
     }
 
     public static void reserva(){
+        
         System.out.println("Digite o seu nome:");
         sc.nextLine();
         String nome = sc.nextLine();
@@ -198,17 +421,18 @@ public class Menu {
         int id = sc.nextInt();
         sc.nextLine();
         System.out.println("Digite o numero do cartao:");
-        String numCartao = sc.nextLine();
+        int numCartao = sc.nextInt();
         System.out.println("Digite o Cvv");
         int cvv = sc.nextInt();
         sc.nextLine();
-        System.out.println("Digite a Data de vencimento:");
-        String vencimento = sc.nextLine();
+        System.out.print("Data de vencimento (YYYY-MM): ");
+        String entrada = sc.next();
+        YearMonth data_vencimento = YearMonth.parse(entrada);
         System.out.println("Digite o seu Telefone:");
-        String telefone = sc.nextLine();
+        int telefone = sc.nextInt();
         System.out.println("Digite o seu Email:");
         String email = sc.nextLine();
-        HospedePagante hospede = new HospedePagante(numCartao, cvv, vencimento, telefone, email, nome, idade,cpf,id);
+        HospedePagante hospede = new HospedePagante(numCartao, cvv, data_vencimento, telefone, email, nome, idade,cpf,id);
         System.out.println("Por favor, informe a data de chegada e a data de saída desejadas");
         Reserva reserva = new Reserva(hospede, sc.nextLine(), sc.nextLine(), id);
         reserva.salvar();
