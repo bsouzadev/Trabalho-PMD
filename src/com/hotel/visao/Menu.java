@@ -18,7 +18,7 @@ public class Menu {
             System.out.println("\n----- SISTEMA HOTEL -----");
             System.out.println("Digite 0 para: Sair");
             System.out.println("Digite 1 para: Se Hospedar");
-            System.out.println("Digite 2 para: Quarto"); //O que seria quarto !?
+            System.out.println("Digite 2 para: Quartos disponíveis");
             System.out.println("Digite 3 para: Fazer uma reserva");
             System.out.print("Escolha: ");
 
