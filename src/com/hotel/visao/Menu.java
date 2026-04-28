@@ -447,29 +447,35 @@ public class Menu {
             System.out.println("-----------------------------");
             System.out.println ("QUARTOS DISPONÍVEIS PARA HOSPEDAGEM:");
             ArrayList<Quarto> disponibilidadeQuartos = quartosDisponiveis(dtEntrada, dtSaida);
-            for (Quarto q : disponibilidadeQuartos) {
-                System.out.println (q);
-            }
-            System.out.print("Informe aqui o ID do quarto que deseja se hospedar: ([0] para sair) ");
-            int id_quarto = sc.nextInt();
-            if (id_quarto == 0) break;
-            Quarto quartoEscolhido = new Quarto (0, "", 0, 0);
-            if (quartoEscolhido.carregar(id_quarto)) {
-                InformacoesReserva info = new InformacoesReserva(quartoEscolhido, dtEntrada, dtSaida);
-                reserva.adicionarInfoReserva(info);
-                if (!reserva.salvar()) reserva.atualizar();
-                System.out.println ("Reserva ao quarto " + id_quarto + " feita com sucesso!");
-                System.out.println("""
-                Deseja reservar algum outro quarto?
-                [0] SIM
-                [1] NÃO
-                """);
-                int escolhaFinalizada = sc.nextInt();
+            if(!disponibilidadeQuartos.isEmpty()) {
+                for (Quarto q : disponibilidadeQuartos) {
+                    System.out.println (q);
+                }
+                System.out.print("Informe aqui o ID do quarto que deseja se hospedar: ([0] para sair) ");
+                int id_quarto = sc.nextInt();
                 sc.nextLine();
-                if (escolhaFinalizada==1) break;
+                if (id_quarto == 0) break;
+                Quarto quartoEscolhido = new Quarto (0, "", 0, 0);
+                if (quartoEscolhido.carregar(id_quarto)) {
+                    InformacoesReserva info = new InformacoesReserva(quartoEscolhido, dtEntrada, dtSaida);
+                    reserva.adicionarInfoReserva(info);
+                    if (!reserva.salvar()) reserva.atualizar();
+                    System.out.println ("Reserva ao quarto " + id_quarto + " feita com sucesso!");
+                    System.out.println("""
+                    Deseja reservar algum outro quarto?
+                    [0] SIM
+                    [1] NÃO
+                    """);
+                    int escolhaFinalizada = sc.nextInt();
+                    sc.nextLine();
+                    if (escolhaFinalizada==1) break;
+                }else {
+                    System.out.println ("O quarto escolhido não existe! Escolha outro. ([0] para sair)");
+                }
             } else {
-                System.out.println ("O quarto escolhido não existe! Escolha outro. ([0] para sair)");
+                System.out.println("Não há quartos a serem reservados na data especificada.");
             }
+        
         }
         reserva.salvar();
     }
