@@ -1,6 +1,5 @@
 package src.com.hotel.modelo;
-import java.util.List;
-import src.com.hotel.visao.BancoDeDados;
+
 
 public class HospedePagante extends Hospede{
     
@@ -22,80 +21,6 @@ public class HospedePagante extends Hospede{
         
         }
 
-    // --------------------------------- SOBREESCRITA ENTIDADE ---------------------------------- //
-
-    public boolean salvar(){
-
-        if(this.persistido){
-            return false;
-        }
-        
-        BancoDeDados.hospedes.add(this);
-        this.persistido = true;
-        return true;
-
-    }
-
-    @Override
-    public boolean atualizar(){
-
-        if(!this.persistido){
-            return false;
-        }
-        
-        for(int i = 0; i < BancoDeDados.hospedes.size(); i++){
-            if(BancoDeDados.hospedes.get(i).id == this.id){
-                BancoDeDados.hospedes.set(i, this);
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    @Override
-    public boolean apagar(int id){
-    
-        for (int i = 0; i < BancoDeDados.hospedes.size(); i++) {
-            
-            if (BancoDeDados.hospedes.get(i).id == id) {
-                
-                BancoDeDados.hospedes.remove(i);
-                this.persistido = false;
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    @Override
-    public boolean carregar(int id){
-        for (Hospede h : BancoDeDados.hospedes) {
-            if (h.id == id && h instanceof HospedePagante) {
-                HospedePagante hp = (HospedePagante) h;
-                this.nome = hp.nome;
-                this.idade = hp.idade;
-                this.cpf = hp.cpf;
-                this.id = hp.id;
-                this.numero_cartao = hp.numero_cartao;
-                this.cvv = hp.cvv;
-                this.data_vencimento = hp.data_vencimento;
-                this.telefone = hp.telefone;
-                this.email = hp.email;
-                this.persistido = true;
-                return true;
-            }
-        }
-        return false;
-
-    }
-
-    @Override
-    public List<Hospede> carregarTodos() {
-        
-        return BancoDeDados.hospedes;
-
-    }
 
     // --------------------------------- GETTERS --------------------------------- //
 
@@ -141,20 +66,12 @@ public class HospedePagante extends Hospede{
         this.email = email;
     }
 
-    // --------------------------------- SOBRESCRITA HOSPEDE --------------------------------- //
-
-    @Override
-    public boolean Pagante(){
-
-        return true;
-    
-    }
 
      @Override
     public String toString() {
         
         return String.format(
-        "%s\nCartão: %s\nCVV: %d\nVencimento: %s\nTelefone: %s\nEmail: %s",
+        "%s\nCartão: %s\nCVV: %d\nVencimento: %s\nTelefone: %s\nEmail: %s\n",
         super.toString(),
         numero_cartao,
         cvv,

@@ -1,10 +1,10 @@
 package src.com.hotel.modelo;
 
-import java.util.ArrayList;
-import java.util.List;
-import src.com.hotel.visao.BancoDeDados;
+//import java.util.ArrayList;
+//import java.util.List;
+//import src.com.hotel.visao.BancoDeDados;
 
-public class Quarto extends Entidade {
+public class Quarto extends Entidade_1<Quarto> {
     protected int numero_quarto;
     protected String qualidade;
     protected double preco;
@@ -15,7 +15,7 @@ public class Quarto extends Entidade {
         this.qualidade = qualidade;
         this.preco = preco;
     }
-    // ------------------------------- SOBRESCRITAS ------------------------------ //
+    /*// ------------------------------- SOBRESCRITAS ------------------------------ //
     @Override
     public boolean salvar() {
         if (this.persistido) {
@@ -71,7 +71,7 @@ public class Quarto extends Entidade {
     @Override
     public List<Quarto> carregarTodos() {
         return new ArrayList<>(BancoDeDados.quartos);
-    }
+    }*/
     
     // --------------------------------- GETTERS --------------------------------- //
 

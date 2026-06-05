@@ -1,10 +1,7 @@
 package src.com.hotel.modelo;
 
-import java.util.ArrayList;
-import src.com.hotel.visao.BancoDeDados;
 
-
-public abstract class Hospede extends Entidade {
+public abstract class Hospede extends Entidade_1<Hospede> {
 
     protected Reserva reserva;
     protected String nome;
@@ -32,10 +29,6 @@ public abstract class Hospede extends Entidade {
         return nome;
     }
 
-    public ArrayList<Hospede> getBanco() { //cadastra um hospedes
-        return BancoDeDados.hospedes;
-    }
-
     // --------------------------------- SETTERS DE HOSPEDE --------------------------------- //
     
     public void setCpf(String cpf) {
@@ -50,9 +43,7 @@ public abstract class Hospede extends Entidade {
         this.nome = nome;
     }
 
-    // --------------------------------- ABSTRATA (VERIFICA PAGANTE) --------------------------------- //
 
-    public abstract boolean Pagante(); //para as classes filhas.
     
     // --------------------------------- TOSTRING DE HOSPEDE --------------------------------- //
 
