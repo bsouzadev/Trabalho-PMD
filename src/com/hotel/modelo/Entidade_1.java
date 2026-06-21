@@ -60,4 +60,10 @@ public String toString() {
     
     return "ID: " + this.id + "\n";
 }
+
+// ================================ Sobrescrevendo o hashcode para funcionar na classe EntidadeDAO ====================//
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(id);
+    }
 }
