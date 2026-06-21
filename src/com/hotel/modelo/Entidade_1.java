@@ -1,6 +1,8 @@
 package src.com.hotel.modelo;
 
-public abstract class Entidade_1 <T extends Entidade_1<T>> implements Comparable<Entidade_1<?>>{
+import java.io.Serializable;
+
+public abstract class Entidade_1 <T extends Entidade_1<T>> implements Serializable, Comparable<Entidade_1<?>>{
     protected int id;
 
     public Entidade_1 (int id){

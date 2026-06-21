@@ -1,10 +1,12 @@
 package src.com.hotel.modelo;
 
+import java.io.Serializable;
+
 //import java.util.ArrayList;
 //import java.util.List;
 //import src.com.hotel.visao.BancoDeDados;
 
-public class Quarto extends Entidade_1<Quarto> {
+public class Quarto extends Entidade_1<Quarto> implements Serializable {
     protected int numero_quarto;
     protected String qualidade;
     protected double preco;
@@ -15,63 +17,6 @@ public class Quarto extends Entidade_1<Quarto> {
         this.qualidade = qualidade;
         this.preco = preco;
     }
-    /*// ------------------------------- SOBRESCRITAS ------------------------------ //
-    @Override
-    public boolean salvar() {
-        if (this.persistido) {
-            return false;
-        }
-        BancoDeDados.quartos.add(this);
-        this.persistido = true;
-        return true;
-    }
-
-    @Override
-    public boolean atualizar() {
-        if (!this.persistido) {
-            return false;
-        }
-        for (int i=0; i< BancoDeDados.quartos.size(); i++) {
-            if (BancoDeDados.quartos.get(i).id == this.id) {
-                BancoDeDados.quartos.set(i, this);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public boolean carregar(int id) {
-        for (int i=0; i<BancoDeDados.quartos.size(); i++) {
-            Quarto quarto = BancoDeDados.quartos.get(i);
-            if (quarto.id == id) {
-                this.id = id;
-                this.numero_quarto = quarto.numero_quarto;
-                this.qualidade = quarto.qualidade;
-                this.preco = quarto.preco;
-                this.persistido = true;
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public boolean apagar(int id) {
-        for (int i=0; i<BancoDeDados.quartos.size(); i++) {
-            if (BancoDeDados.quartos.get(i).id == id) {
-                BancoDeDados.quartos.get(i).persistido = false;
-                BancoDeDados.quartos.remove(i);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public List<Quarto> carregarTodos() {
-        return new ArrayList<>(BancoDeDados.quartos);
-    }*/
     
     // --------------------------------- GETTERS --------------------------------- //
 

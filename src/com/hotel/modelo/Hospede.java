@@ -1,7 +1,8 @@
 package src.com.hotel.modelo;
 
+import java.io.Serializable;
 
-public abstract class Hospede extends Entidade_1<Hospede> {
+public abstract class Hospede extends Entidade_1<Hospede> implements Serializable {
 
     protected Reserva reserva;
     protected String nome;

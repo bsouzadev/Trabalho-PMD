@@ -1,20 +1,30 @@
 package src.com.hotel.persistencia;
-import src.com.hotel.modelo.Entidade_1;
-
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import src.com.hotel.modelo.Entidade_1;
 
 
 public class EntidadeDAO <E extends Entidade_1<?>> {
 
     protected Set<E> setObjetos = new HashSet<>();
+    private Class<E> classeObj;
+
+    public EntidadeDAO (Class <E> classeObj) {
+        this.classeObj = classeObj;
+    }
 
     public void salvar(E objt) throws PersistenceException {
 
         if (!setObjetos.add(objt)) {
-            throw new PersistenceException("O objeto já existe no conjunto!");
+            throw new PersistenceException("salvar", "O objeto já existe no conjunto!", objt);
         }
     }
 
@@ -30,7 +40,7 @@ public class EntidadeDAO <E extends Entidade_1<?>> {
         }
 
         if (encontrado == null) {
-            throw new PersistenceException("Objeto não encontrado.");
+            throw new PersistenceException("atualizar", "Objeto não encontrado.", objt);
         }
 
         setObjetos.remove(encontrado);
@@ -49,7 +59,7 @@ public class EntidadeDAO <E extends Entidade_1<?>> {
         }
 
         if (encontrado == null) {
-            throw new PersistenceException("Objeto não encontrado.");
+            throw new PersistenceException("apagar", "Objeto não encontrado.", id);
         }
 
         setObjetos.remove(encontrado);
@@ -64,7 +74,7 @@ public class EntidadeDAO <E extends Entidade_1<?>> {
             }
         }
 
-        throw new PersistenceException("Não existe um objeto com o mesmo id no conjunto!");
+        throw new PersistenceException("carregar", "Não existe um objeto com o mesmo id no conjunto!", id);
     }
 
     public E[] carregarTodos() throws PersistenceException {
@@ -72,7 +82,7 @@ public class EntidadeDAO <E extends Entidade_1<?>> {
         ArrayList<E> aux = new ArrayList<>(setObjetos);
 
         if (aux.isEmpty()) {
-            throw new PersistenceException("Conjunto vazio!");
+            throw new PersistenceException("carregarTodos", "Conjunto Vazio", aux);
         }
 
         Collections.sort(aux);
@@ -83,11 +93,27 @@ public class EntidadeDAO <E extends Entidade_1<?>> {
         return vet;
     }
 
-    public boolean persistir(){
+    public void persistir() throws IOException {
 
+        String nomeArquivo = classeObj.getSimpleName() + "Dados.dat";
+        try (ObjectOutputStream escrita = new ObjectOutputStream(new FileOutputStream(nomeArquivo))) {
+            //O arquivo .dat consegue salvar o objeto inteiro. A linha abaixo salva todo o setObjetos de uma só vez no arquivo próprio da classe a ele destinada
+            escrita.writeObject(setObjetos);
+        }
     }
 
-    public boolean recuperar(){
-        
+    @SuppressWarnings("unchecked")
+    public void recuperar() throws IOException, ClassNotFoundException {
+
+        String nomeArquivo = classeObj.getSimpleName() + "Dados.dat";
+
+        //Se o arquivo não existir, não há o que recuperar, e, portanto, interrompe o método
+        File arquivo = new File (nomeArquivo);
+        if (!arquivo.exists()) return;
+
+        try (ObjectInputStream leitura = new ObjectInputStream(new FileInputStream(nomeArquivo))) {
+            setObjetos.clear();
+            setObjetos.addAll((Set <E>) leitura.readObject());
+        }
     }
 }
