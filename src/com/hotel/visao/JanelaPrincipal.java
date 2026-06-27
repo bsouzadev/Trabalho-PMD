@@ -1,19 +1,19 @@
 package src.com.hotel.visao;
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Box;
-import java.awt.Component;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 
 public class JanelaPrincipal extends JFrame implements ActionListener {
 
@@ -88,7 +88,7 @@ public class JanelaPrincipal extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        
+    
         if (e.getSource() == btHospedes) {
             new JanelaHospedes().setVisible(true);
         }else if (e.getSource() == btQuartos){
