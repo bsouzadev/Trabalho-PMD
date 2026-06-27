@@ -77,7 +77,7 @@ public class EntidadeDAO <E extends Entidade_1<?>> {
         throw new PersistenceException("carregar", "Não existe um objeto com o mesmo id no conjunto!", id);
     }
 
-    public E[] carregarTodos() throws PersistenceException {
+    /*public E[] carregarTodos() throws PersistenceException {
 
         ArrayList<E> aux = new ArrayList<>(setObjetos);
 
@@ -91,7 +91,24 @@ public class EntidadeDAO <E extends Entidade_1<?>> {
         E[] vet = (E[]) aux.toArray(new Entidade_1[aux.size()]);
 
         return vet;
+    }*/
+
+         public ArrayList<E> carregarTodos() throws PersistenceException {
+
+    ArrayList<E> lista = new ArrayList<>(setObjetos);
+
+    if (lista.isEmpty()) {
+        throw new PersistenceException(
+                "carregarTodos",
+                "Conjunto vazio.",
+                lista
+        );
     }
+
+    Collections.sort(lista);
+
+    return lista;
+}
 
     public void persistir() throws IOException {
 
