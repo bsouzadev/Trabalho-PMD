@@ -6,21 +6,24 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import src.com.hotel.modelo.Hospede;
+import src.com.hotel.modelo.HospedePagante;
 import src.com.hotel.persistencia.EntidadeDAO;
+import src.com.hotel.persistencia.GaranteDAO;
+import src.com.hotel.persistencia.PersistenceException;
 
 
-public class JanelaHospedes extends JFrame implements ActionListener{
+public class JanelaHospedes extends JFrame implements ActionListener {
 
-    private EntidadeDAO <Hospede> dao;
+    private EntidadeDAO <HospedePagante> dao;
     private JTextField tfNome, tfCpf, tfIdade;
-    private JButton btCadastrar, btEditar, btApagar, btCancelar;
+    private JButton btCadastrar, btEditar, btApagar;
     private DefaultTableModel modeloTabela;
     private JTable tabela;
 
@@ -30,7 +33,16 @@ public class JanelaHospedes extends JFrame implements ActionListener{
     setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     setLocationRelativeTo(null);
     setLayout(new GridBagLayout());
+    dao = GaranteDAO.getDAO(HospedePagante.class);
+
+    try {
+      dao.recuperar();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
     modeloTabela = new DefaultTableModel();
+    modeloTabela.addColumn("ID");
     modeloTabela.addColumn("Nome");
     modeloTabela.addColumn("CPF");
     modeloTabela.addColumn("Idade");
@@ -78,27 +90,19 @@ public class JanelaHospedes extends JFrame implements ActionListener{
     gbc.gridwidth = 2;
     add(btApagar, gbc);
 
-    btCancelar = new JButton("Cancelar");
-    btCancelar.setFont(fonte);
-    btCancelar.addActionListener(this);
-    gbc.gridx = 6;
-    gbc.gridy = 2;
-    gbc.weightx = 1;
-    gbc.weighty = 0;
-    gbc.gridwidth = 2;
-    add(btCancelar, gbc);
-
     // linha 1
     tabela = new JTable(modeloTabela);
     tabela.setFont(fonte);
-    tabela.getColumnModel().getColumn(0).setMaxWidth(300);
-    tabela.getColumnModel().getColumn(1).setMaxWidth(200);
-    tabela.getColumnModel().getColumn(2).setMaxWidth(50);
-    tabela.getColumnModel().getColumn(3).setMaxWidth(200);
-    tabela.getColumnModel().getColumn(4).setMaxWidth(200);
-    tabela.getColumnModel().getColumn(5).setMaxWidth(50);
-    tabela.getColumnModel().getColumn(6).setMaxWidth(100);
-    tabela.getColumnModel().getColumn(7).setMaxWidth(50);
+    tabela.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+    tabela.getColumnModel().getColumn(1).setPreferredWidth(10);
+    tabela.getColumnModel().getColumn(1).setPreferredWidth(300);
+    tabela.getColumnModel().getColumn(2).setPreferredWidth(200);
+    tabela.getColumnModel().getColumn(3).setPreferredWidth(100);
+    tabela.getColumnModel().getColumn(4).setPreferredWidth(200);
+    tabela.getColumnModel().getColumn(5).setPreferredWidth(300);
+    tabela.getColumnModel().getColumn(6).setPreferredWidth(100);
+    tabela.getColumnModel().getColumn(7).setPreferredWidth(150);
+    tabela.getColumnModel().getColumn(8).setPreferredWidth(100);
 
     var scroll = new JScrollPane();
     scroll.setViewportView(tabela);
@@ -110,6 +114,26 @@ public class JanelaHospedes extends JFrame implements ActionListener{
     gbc.fill = GridBagConstraints.BOTH;
     gbc.insets = new Insets(10, 0, 10, 0);
     add(scroll, gbc);
+
+    try {
+      modeloTabela.setRowCount(0);
+      for (HospedePagante hp : dao.carregarTodos()) {
+
+          modeloTabela.addRow(new Object[]{
+              hp.getId(),
+              hp.getNome(),
+              hp.getCpf(),
+              hp.getIdade(),
+              hp.getTelefone(),
+              hp.getEmail(),
+              hp.getNumeroCartao(),
+              hp.getDataVencimento(),
+              hp.getCvv()
+          });
+      }
+    }catch (PersistenceException e) {
+      //vazio
+  }
   }
 
   @Override
@@ -120,23 +144,34 @@ public class JanelaHospedes extends JFrame implements ActionListener{
         getContentPane().removeAll();
         //getContentPane().setLayout(new BorderLayout());
         JPCadastroHospedes painel = new JPCadastroHospedes();
-
+        
         painel.addSalvarListener(ev -> {
-            modeloTabela.addRow (new Object[] {
-                painel.getNome(),
-                painel.getCpf(),
-                painel.getIdade(),
+          getContentPane().removeAll();
+          getContentPane().setLayout(new GridBagLayout());
+          
+          //Esse bloco só salva as informações de hospede na persistencia
+          try {
+              HospedePagante hospedeP = new HospedePagante (
+                Integer.parseInt(painel.getNumCartao()),
+                Integer.parseInt(painel.getCvv()),
+                painel.getVencimento(),
                 painel.getTelefone(),
                 painel.getEmail(),
-                painel.getNumCartao(),
-                painel.getVencimento(),
-                painel.getCvv()
-            });
-            getContentPane().removeAll();
-            getContentPane().setLayout(new GridBagLayout());
-            montaLista();
-            revalidate();
-            repaint();
+                painel.getNome(),
+                Integer.parseInt(painel.getIdade()),
+                painel.getCpf(),
+                painel.getId()
+              );
+              dao.salvar(hospedeP);
+              dao.persistir();
+          } catch (Exception e2) {
+              e2.printStackTrace();
+          }
+
+          montaLista();
+          revalidate();
+          repaint();
+
         });
 
         painel.addCancelarListener(ev -> {
@@ -146,30 +181,97 @@ public class JanelaHospedes extends JFrame implements ActionListener{
             revalidate();
             repaint();
         });
+
+        //Assim que clicamos no "Cadastrar", executa o código abaixo
         add (painel);
         revalidate();
         repaint();
 
     } else if (e.getSource() == btEditar) {
-      for (int i = 0; i < tabela.getRowCount(); i++)
-        if (tabela.isRowSelected(i)) {
-                modeloTabela.setValueAt(tfNome.getText(), i, 0);
-                modeloTabela.setValueAt(tfCpf.getText().replaceAll("\\D", ""), i, 1);
-                modeloTabela.setValueAt(tfIdade.getText(), i, 2);
-                break;
+      JPCadastroHospedes painel = new JPCadastroHospedes();
+
+        int linha = tabela.getSelectedRow();
+        if (linha == -1) return;
+        final int idAntigo = (int) modeloTabela.getValueAt(linha, 0);
+        int id = (int) modeloTabela.getValueAt(linha, 0);
+        try {
+            HospedePagante h = dao.carregar(id);
+            painel.preencherCampos(h);
+            
+            getContentPane().removeAll();
+            add(painel);
+            revalidate();
+            repaint();
+
+        } catch (PersistenceException pe) {
+          pe.printStackTrace();
         }
 
+      
+
+      painel.addSalvarListener(ev -> {
+          getContentPane().removeAll();
+          getContentPane().setLayout(new GridBagLayout());
+          
+          //Esse bloco só salva as informações de hospede na persistencia
+          HospedePagante hospedeP = null;
+          try {
+                hospedeP = new HospedePagante (
+                Integer.parseInt(painel.getNumCartao()),
+                Integer.parseInt(painel.getCvv()),
+                painel.getVencimento(),
+                painel.getTelefone(),
+                painel.getEmail(),
+                painel.getNome(),
+                Integer.parseInt(painel.getIdade()),
+                painel.getCpf(),
+                painel.getId()
+              );
+              dao.atualizar(hospedeP);
+              dao.persistir();
+          } catch (PersistenceException e2) {
+              if (e2.getOperacao().compareTo("atualizar") == 0) {
+                try {
+                  dao.apagar(idAntigo);
+                  dao.salvar(hospedeP);
+                  dao.persistir();
+                } catch (PersistenceException e3) {
+                  //...
+                } catch (IOException e4) {
+                  //...
+                }
+              }
+          } catch (IOException e5) {
+            //...
+          }
+
+          montaLista();
+          revalidate();
+          repaint();
+
+        });
+
+        painel.addCancelarListener(ev -> {
+            getContentPane().removeAll();
+            getContentPane().setLayout(new GridBagLayout());
+            montaLista();
+            revalidate();
+            repaint();
+        });
+
     } else if (e.getSource() == btApagar) {
-      for (int i = 0; i < tabela.getRowCount(); i++)
-        if (tabela.isRowSelected(i))
-          modeloTabela.removeRow(i);
+        int linha = tabela.getSelectedRow();
+        if (linha == -1) return;
+        modeloTabela.removeRow(linha);
 
-    } else if (e.getSource() == btCancelar) {
-    //   tfNome.setText("");
-    //   tfCpf.setText("");
-    //   tfIdade.setText("");
-    //   tabela.clearSelection();
+        int id = (int) modeloTabela.getValueAt(linha, 0);
+
+        try {
+            dao.apagar(id);
+        } catch (PersistenceException f) {
+          f.printStackTrace();
+        }
+
     }
-  }
 
-}
+}}

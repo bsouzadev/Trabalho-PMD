@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
+import src.com.hotel.modelo.HospedePagante;
 
 
 public class JPCadastroHospedes extends JPanel {
@@ -17,6 +18,7 @@ public class JPCadastroHospedes extends JPanel {
     private JTextField tfNumCartao = new JTextField(10);
     private JTextField tfVencimento = new JTextField(10);
     private JTextField tfCvv = new JTextField(10);
+    private JTextField tfId = new JTextField(10);
 
     private List <ActionListener> salvarListeners = new ArrayList<>();
     private ActionListener cancelarListener;
@@ -119,6 +121,12 @@ public class JPCadastroHospedes extends JPanel {
         campoCVV.add (new JLabel("CVV"));
         campoCVV.add (tfCvv);
 
+        JPanel campoID = new JPanel();
+        campoID.setLayout(new BoxLayout(campoID, BoxLayout.Y_AXIS));
+        campoID.setOpaque(false);
+        campoID.add(new JLabel("ID"));
+        campoID.add (tfId);
+
         //SEÇÕES
         
         //Dados Pessoais
@@ -139,7 +147,7 @@ public class JPCadastroHospedes extends JPanel {
 
         gridbc.gridx=0;
         gridbc.gridy=1;
-        gridbc.gridwidth = 2;
+        gridbc.gridwidth = 3;
         gridbc.weightx = 1;
         dadosPessoais.add(campoNome, gridbc);
 
@@ -152,8 +160,14 @@ public class JPCadastroHospedes extends JPanel {
         gridbc.gridx=1;
         gridbc.gridy=2;
         gridbc.gridwidth = 1;
-        gridbc.weightx = 0.5;
+        gridbc.weightx = 0.25;
         dadosPessoais.add(campoIdade, gridbc);
+
+        gridbc.gridx=3;
+        gridbc.gridy=2;
+        gridbc.gridwidth = 1;
+        gridbc.weightx = 0.25;
+        dadosPessoais.add(campoID, gridbc);
 
         //Contato
         JPanel contato = new JPanel(new GridBagLayout());
@@ -309,6 +323,19 @@ public class JPCadastroHospedes extends JPanel {
 
     }
 
+    //Método para a implementação da edição de valores
+    public void preencherCampos(HospedePagante h) {
+        tfId.setText(String.valueOf(h.getId()));
+        tfNome.setText(h.getNome());
+        tfCpf.setText(h.getCpf());
+        tfIdade.setText(String.valueOf(h.getIdade()));
+        tfTelefone.setText(h.getTelefone());
+        tfEmail.setText(h.getEmail());
+        tfNumCartao.setText(String.valueOf(h.getNumeroCartao()));
+        tfVencimento.setText(h.getDataVencimento());
+        tfCvv.setText(String.valueOf(h.getCvv()));
+    }
+
     //GETTERS
     public String getNome () {return tfNome.getText();}
     public String getCpf () {return tfCpf.getText();}
@@ -318,6 +345,7 @@ public class JPCadastroHospedes extends JPanel {
     public String getNumCartao () {return tfNumCartao.getText();}
     public String getVencimento () {return tfVencimento.getText();}
     public String getCvv () {return tfCvv.getText();}
+    public int getId () {return Integer.parseInt(tfId.getText());}
 
 
 }

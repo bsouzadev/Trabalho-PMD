@@ -12,11 +12,11 @@ public class PersistenceException extends Exception {
         this.valor = valor;
     }
 
-    String getOperacao () {
+    public String getOperacao () {
         return this.operacao;
     }
 
-    Object getValor () {
+    public Object getValor () {
         return this.valor;
     }
 
