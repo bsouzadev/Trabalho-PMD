@@ -7,6 +7,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
@@ -20,9 +21,11 @@ import src.com.hotel.persistencia.PersistenceException;
 
 
 
+
 public class JanelaQuartos extends JFrame implements ActionListener {
 
-    private JTextField tfnm, tfvl, tfql, tfid;
+    private JTextField tfnm, tfvl, tfid;
+    private JComboBox<String> cbql;
     private JButton btsv, btal, btrm, btbr;
     private DefaultTableModel modeloTabela;
     private JTable tabela;
@@ -119,18 +122,19 @@ public class JanelaQuartos extends JFrame implements ActionListener {
     gbc.weighty = 0;
     gbc.gridwidth = 1;
     add(lbql, gbc);
-
-    tfql = new JTextField();
-    tfql.setFont(fonte);
-
+    
+    cbql = new JComboBox<>();
+    cbql.addItem("Standard");
+    cbql.addItem("Superior");
+    cbql.addItem("Deluxe");
+    cbql.setFont(fonte);
     gbc.gridx = 1;
     gbc.gridy = 3;
     gbc.weightx = 0;
     gbc.weighty = 0;
     gbc.gridwidth = 7;
-    add(tfql, gbc);
-
-
+    add(cbql, gbc);
+        
     // linha 4
     btsv = new JButton("Cadastrar");
     btsv.setFont(fonte);
@@ -180,6 +184,7 @@ public class JanelaQuartos extends JFrame implements ActionListener {
     modeloTabela.addColumn("Qualidade");
 
     tabela = new JTable(modeloTabela);
+    tabela.setAutoCreateRowSorter(true);
     tabela.setFont(fonte);
     tabela.getColumnModel().getColumn(0).setMaxWidth(200);   
     tabela.getColumnModel().getColumn(1).setMaxWidth(200);  
@@ -222,7 +227,7 @@ public class JanelaQuartos extends JFrame implements ActionListener {
         try {
           Quarto quarto = new Quarto(
             Integer.parseInt(tfnm.getText()),
-            tfql.getText(),
+            (String) cbql.getSelectedItem(),
             Double.parseDouble(tfvl.getText()),
             Integer.parseInt(tfid.getText())
           );
@@ -239,7 +244,7 @@ public class JanelaQuartos extends JFrame implements ActionListener {
           tfid.setText("");
           tfnm.setText("");
           tfvl.setText("");
-          tfql.setText("");
+          cbql.setSelectedIndex(-1);
           tabela.clearSelection();
        
         }catch (NumberFormatException ex) {
@@ -256,7 +261,7 @@ public class JanelaQuartos extends JFrame implements ActionListener {
 
           Quarto quarto = new Quarto(
             Integer.parseInt(tfnm.getText()),
-            tfql.getText(),
+            (String) cbql.getSelectedItem(),
             Double.parseDouble(tfvl.getText()),
             id
           );
@@ -271,7 +276,7 @@ public class JanelaQuartos extends JFrame implements ActionListener {
           tfid.setText("");
           tfnm.setText("");
           tfvl.setText("");
-          tfql.setText("");
+          cbql.setSelectedIndex(-1);
           tabela.clearSelection();
 
         } catch (NumberFormatException ex ) {
@@ -305,7 +310,7 @@ public class JanelaQuartos extends JFrame implements ActionListener {
 
         tfnm.setText(String.valueOf(quarto.getNumero_quarto()));
         tfvl.setText(String.valueOf(quarto.getPreco()));
-        tfql.setText(quarto.getQualidade());
+        cbql.setSelectedItem(quarto.getQualidade());
 
         for(int i = 0; i < tabela.getRowCount(); i++){
 
