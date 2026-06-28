@@ -34,7 +34,7 @@ public class JPCadastroHospedes extends JPanel {
         add (corpo (), BorderLayout.CENTER);
         add (barraInferior(), BorderLayout.SOUTH);
         btnSalvar.addActionListener(ev -> { 
-            String erro = validarCampos();
+            String erro = new Tratador(this).validarCampos();
             if (erro != null) {
                 JOptionPane.showMessageDialog(this, erro, "Erro", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -256,71 +256,6 @@ public class JPCadastroHospedes extends JPanel {
         barra.add(btnCancelar);
         barra.add(btnSalvar);
         return barra;
-    }
-
-    //Métodos de validação
-    private String validarCampos () {
-    
-        if (tfNome.getText().trim().isEmpty()) {
-            return "O nome é obrigatório.";
-        }
-        if (tfCpf.getText().trim().isEmpty()) {
-            return "O CPF é obrigatório.";
-        }
-        if (!validaCPF()) {
-            return "CPF inválido!";
-        }
-        if (tfIdade.getText().trim().isEmpty()) {
-            return "A idade é obrigatória.";
-        }
-        try {
-            int idade = Integer.parseInt(tfIdade.getText());
-            if (idade < 0) return "Idade inválida";
-        } catch (NumberFormatException e) {
-            return "A idade deve ser um número.";
-        }
-        try {
-            int numCartao = Integer.parseInt(tfNumCartao.getText());
-        } catch (NumberFormatException e) {
-            return "O número do cartão deve ser um número.";
-        }
-        return null;
-
-    }
-
-    private boolean validaCPF () {
-        String texto = tfCpf.getText().trim(), cpf = "";
-        boolean digitosIguais = true;
-        int calculo10=0, calculo11=0;
-
-        int tamCpf, tamTexto = texto.length();
-        for (int i=0; i<tamTexto; i++) {
-            char c = texto.charAt(i);
-            if (c >= '0' && c <= '9') cpf += c;
-        }
-        
-        tamCpf = cpf.length();
-        if (tamCpf != 11) return false;
-        calculo10 += 10*(cpf.charAt(0) - '0');
-        calculo11 += 11*(cpf.charAt(0) - '0');
-        for (int i=1; i<tamCpf; i++) {
-            char c = cpf.charAt(i);
-            if (c != cpf.charAt(i-1)) digitosIguais = false;
-            if (i < tamCpf-2) {
-                calculo10 += (10-i) * (c - '0');
-                calculo11 += (11-i) * (c - '0');
-            }
-        }
-        
-        if (digitosIguais) return false;
-        calculo10%=11;
-        calculo10 = (calculo10 == 0 || calculo10 == 1) ? 0 : 11-calculo10;
-        calculo11 += calculo10*2;
-        calculo11%=11;
-        calculo11 = (calculo11 == 0 || calculo11 == 1) ? 0 : 11-calculo11;
-
-        return (calculo10 == (cpf.charAt(9) - '0') && calculo11 == (cpf.charAt(10) - '0'));
-
     }
 
     //Método para a implementação da edição de valores

@@ -3,13 +3,13 @@ package src.com.hotel.modelo;
 
 public class HospedePagante extends Hospede{
     
-    protected int numero_cartao;
+    protected String numero_cartao;
     protected int cvv;
     protected String data_vencimento;
     protected String telefone;
     protected String email;
 
-    public HospedePagante(int numero_cartao, int cvv, String data_vencimento, String telefone,
+    public HospedePagante(String numero_cartao, int cvv, String data_vencimento, String telefone,
         String email, String nome, int idade, String cpf, int id){
             
             super(nome, idade, cpf, id);
@@ -24,7 +24,7 @@ public class HospedePagante extends Hospede{
 
     // --------------------------------- GETTERS --------------------------------- //
 
-    public int getNumeroCartao(){
+    public String getNumeroCartao(){
         return this.numero_cartao;
     }
 
@@ -46,7 +46,7 @@ public class HospedePagante extends Hospede{
 
     // --------------------------------- SETTERS --------------------------------- //
 
-    public void setNumeroCartao(int numero_cartao){
+    public void setNumeroCartao(String numero_cartao){
         this.numero_cartao = numero_cartao;
     }
 
