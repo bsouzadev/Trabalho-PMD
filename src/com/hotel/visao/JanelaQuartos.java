@@ -23,7 +23,7 @@ import src.com.hotel.persistencia.PersistenceException;
 public class JanelaQuartos extends JFrame implements ActionListener {
 
     private JTextField tfnm, tfvl, tfql, tfid;
-    private JButton btsv, btal, btrm, btcn;
+    private JButton btsv, btal, btrm, btbr;
     private DefaultTableModel modeloTabela;
     private JTable tabela;
     private EntidadeDAO<Quarto> dao;
@@ -162,15 +162,15 @@ public class JanelaQuartos extends JFrame implements ActionListener {
     gbc.gridwidth = 2;
     add(btrm, gbc);
 
-    btcn = new JButton("Cancelar");
-    btcn.setFont(fonte);
-    btcn.addActionListener(this);
+    btbr = new JButton("Buscar");
+    btbr.setFont(fonte);
+    btbr.addActionListener(this);
     gbc.gridx = 6;
     gbc.gridy = 4;
     gbc.weightx = 1;
     gbc.weighty = 0;
     gbc.gridwidth = 2;
-    add(btcn, gbc);
+    add(btbr, gbc);
 
     // linha 5
     modeloTabela = new DefaultTableModel();
@@ -235,8 +235,17 @@ public class JanelaQuartos extends JFrame implements ActionListener {
             quarto.getPreco(),
             quarto.getQualidade()
           });
-        }catch (Exception ex) {
-          ex.printStackTrace();
+
+          tfid.setText("");
+          tfnm.setText("");
+          tfvl.setText("");
+          tfql.setText("");
+          tabela.clearSelection();
+       
+        }catch (NumberFormatException ex) {
+          System.out.println("\u001B[31mInformação em formato incorreto.\u001B[0m");
+        }catch (Exception ex2){
+          ex2.printStackTrace();
         }
     }else if (e.getSource() == btal) {
       int linha = tabela.getSelectedRow();
@@ -259,8 +268,16 @@ public class JanelaQuartos extends JFrame implements ActionListener {
           modeloTabela.setValueAt(quarto.getPreco(), linha, 2);
           modeloTabela.setValueAt(quarto.getQualidade(), linha, 3);
 
-        } catch (Exception ex) {
-          ex.printStackTrace();
+          tfid.setText("");
+          tfnm.setText("");
+          tfvl.setText("");
+          tfql.setText("");
+          tabela.clearSelection();
+
+        } catch (NumberFormatException ex ) {
+          System.out.println("\u001B[31mInformação em formato incorreto.\u001B[0m");
+        } catch (Exception ex2){
+          ex2.printStackTrace();
         }
       }
     }else if (e.getSource() == btrm) {
@@ -279,12 +296,30 @@ public class JanelaQuartos extends JFrame implements ActionListener {
             ex.printStackTrace();
           }
       }
-    } else if (e.getSource() == btcn) {
-      tfid.setText("");
-      tfnm.setText("");
-      tfvl.setText("");
-      tfql.setText("");
-      tabela.clearSelection();
+    }else if (e.getSource() == btbr) {
+     
+      try{
+
+        int id = Integer.parseInt(tfid.getText());
+        Quarto quarto = dao.carregar(id);
+
+        tfnm.setText(String.valueOf(quarto.getNumero_quarto()));
+        tfvl.setText(String.valueOf(quarto.getPreco()));
+        tfql.setText(quarto.getQualidade());
+
+        for(int i = 0; i < tabela.getRowCount(); i++){
+
+            int idTabela = (Integer) modeloTabela.getValueAt(i, 0);
+
+            if(idTabela == id){
+                tabela.setRowSelectionInterval(i, i);
+                break;
+            }
+        }
+    }catch(Exception ex){
+        ex.printStackTrace();
+    }
+
     }
   }
 
