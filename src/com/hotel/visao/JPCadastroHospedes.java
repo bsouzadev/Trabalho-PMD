@@ -8,7 +8,7 @@ import javax.swing.*;
 import src.com.hotel.modelo.HospedePagante;
 
 
-public class JPCadastroHospedes extends JPanel {
+public class JPCadastroHospedes extends JPanel implements PainelCadastro <HospedePagante>{
 
     private JTextField tfNome = new JTextField(20);
     private JTextField tfCpf = new JTextField(10);
@@ -45,14 +45,6 @@ public class JPCadastroHospedes extends JPanel {
         btnCancelar.addActionListener(ev -> {
             cancelarListener.actionPerformed(ev);
         });
-    }
-
-    public void addSalvarListener(ActionListener l) {
-        salvarListeners.add(l);
-    }
-
-    public void addCancelarListener (ActionListener al) {
-        cancelarListener = al;
     }
 
     public JPanel cabecalho () {
@@ -258,7 +250,19 @@ public class JPCadastroHospedes extends JPanel {
         return barra;
     }
 
-    //Método para a implementação da edição de valores
+    //GETTERS
+    public String getNome () {return tfNome.getText();}
+    public String getCpf () {return tfCpf.getText();}
+    public String getIdade () {return tfIdade.getText();}
+    public String getTelefone () {return tfTelefone.getText();}
+    public String getEmail () {return tfEmail.getText();}
+    public String getNumCartao () {return tfNumCartao.getText();}
+    public String getVencimento () {return tfVencimento.getText();}
+    public String getCvv () {return tfCvv.getText();}
+    public int getId () {return Integer.parseInt(tfId.getText());}
+
+    //Sobreescrita dos métodos da interface
+    @Override
     public void preencherCampos(HospedePagante h) {
         tfId.setText(String.valueOf(h.getId()));
         tfNome.setText(h.getNome());
@@ -271,16 +275,20 @@ public class JPCadastroHospedes extends JPanel {
         tfCvv.setText(String.valueOf(h.getCvv()));
     }
 
-    //GETTERS
-    public String getNome () {return tfNome.getText();}
-    public String getCpf () {return tfCpf.getText();}
-    public String getIdade () {return tfIdade.getText();}
-    public String getTelefone () {return tfTelefone.getText();}
-    public String getEmail () {return tfEmail.getText();}
-    public String getNumCartao () {return tfNumCartao.getText();}
-    public String getVencimento () {return tfVencimento.getText();}
-    public String getCvv () {return tfCvv.getText();}
-    public int getId () {return Integer.parseInt(tfId.getText());}
+    @Override
+    public HospedePagante construirEntidade() {
+        return new HospedePagante (getNumCartao(), Integer.parseInt(getCvv()), getVencimento(), getTelefone(), getEmail(), getNome(), Integer.parseInt(getIdade()), getCpf(), getId());
+    }
+
+    @Override
+    public void addSalvarListener(ActionListener l) {
+        salvarListeners.add(l);
+    }
+
+    @Override
+    public void addCancelarListener (ActionListener al) {
+        cancelarListener = al;
+    }
 
 
 }

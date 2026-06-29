@@ -1,5 +1,7 @@
 package src.com.hotel.visao;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -13,7 +15,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import src.com.hotel.modelo.Entidade_1;
+import src.com.hotel.modelo.HospedeNormal;
 import src.com.hotel.modelo.HospedePagante;
 import src.com.hotel.persistencia.EntidadeDAO;
 import src.com.hotel.persistencia.GaranteDAO;
@@ -22,7 +27,8 @@ import src.com.hotel.persistencia.PersistenceException;
 
 public class JanelaHospedes extends JFrame implements ActionListener {
 
-    private EntidadeDAO <HospedePagante> dao;
+    private EntidadeDAO <HospedePagante> daoPagante;
+    private EntidadeDAO <HospedeNormal> daoNormal;
     private JTextField tfNome, tfCpf, tfIdade;
     private JButton btCadastrar, btEditar, btApagar, btBuscar;
     private DefaultTableModel modeloTabela;
@@ -34,16 +40,19 @@ public class JanelaHospedes extends JFrame implements ActionListener {
     setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     setLocationRelativeTo(null);
     setLayout(new GridBagLayout());
-    dao = GaranteDAO.getDAO(HospedePagante.class);
+    daoPagante = GaranteDAO.getDAO(HospedePagante.class);
+    daoNormal = GaranteDAO.getDAO(HospedeNormal.class);
 
     try {
-      dao.recuperar();
+      daoPagante.recuperar();
+      daoNormal.recuperar();
     } catch (Exception e) {
       e.printStackTrace();
     }
 
     modeloTabela = new DefaultTableModel();
     modeloTabela.addColumn("ID");
+    modeloTabela.addColumn("Tipo");
     modeloTabela.addColumn("Nome");
     modeloTabela.addColumn("CPF");
     modeloTabela.addColumn("Idade");
@@ -106,17 +115,21 @@ public class JanelaHospedes extends JFrame implements ActionListener {
     // linha 1
     tabela = new JTable(modeloTabela);
     tabela.setAutoCreateRowSorter(true);
+    configuraCoresTabela(tabela);
     tabela.setFont(fonte);
     tabela.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-    tabela.getColumnModel().getColumn(1).setPreferredWidth(10);
-    tabela.getColumnModel().getColumn(1).setPreferredWidth(300);
-    tabela.getColumnModel().getColumn(2).setPreferredWidth(200);
-    tabela.getColumnModel().getColumn(3).setPreferredWidth(100);
-    tabela.getColumnModel().getColumn(4).setPreferredWidth(200);
-    tabela.getColumnModel().getColumn(5).setPreferredWidth(300);
-    tabela.getColumnModel().getColumn(6).setPreferredWidth(250);
-    tabela.getColumnModel().getColumn(7).setPreferredWidth(150);
-    tabela.getColumnModel().getColumn(8).setPreferredWidth(100);
+    tabela.getColumnModel().getColumn(0).setPreferredWidth(60);
+    tabela.getColumnModel().getColumn(1).setPreferredWidth(0); //
+    tabela.getColumnModel().getColumn(1).setMinWidth(0); //Oculta a informação do tipo de hóspede na tabela visual
+    tabela.getColumnModel().getColumn(1).setMaxWidth(0); //
+    tabela.getColumnModel().getColumn(2).setPreferredWidth(300);
+    tabela.getColumnModel().getColumn(3).setPreferredWidth(200);
+    tabela.getColumnModel().getColumn(4).setPreferredWidth(100);
+    tabela.getColumnModel().getColumn(5).setPreferredWidth(200);
+    tabela.getColumnModel().getColumn(6).setPreferredWidth(300);
+    tabela.getColumnModel().getColumn(7).setPreferredWidth(250);
+    tabela.getColumnModel().getColumn(8).setPreferredWidth(150);
+    tabela.getColumnModel().getColumn(9).setPreferredWidth(100);
 
     var scroll = new JScrollPane();
     scroll.setViewportView(tabela);
@@ -131,10 +144,11 @@ public class JanelaHospedes extends JFrame implements ActionListener {
 
     try {
       modeloTabela.setRowCount(0);
-      for (HospedePagante hp : dao.carregarTodos()) {
+      for (HospedePagante hp : daoPagante.carregarTodos()) {
 
           modeloTabela.addRow(new Object[]{
               hp.getId(),
+              "Pagante",
               hp.getNome(),
               hp.getCpf(),
               hp.getIdade(),
@@ -144,6 +158,17 @@ public class JanelaHospedes extends JFrame implements ActionListener {
               hp.getDataVencimento(),
               hp.getCvv()
           });
+      }
+      
+      for (HospedeNormal hn : daoNormal.carregarTodos()) {
+        modeloTabela.addRow(new Object[]{
+            hn.getId(),
+            "Normal",
+            hn.getNome(),
+            hn.getCpf(),
+            hn.getIdade()
+        });
+
       }
     }catch (PersistenceException e) {
       //vazio
@@ -157,57 +182,73 @@ public class JanelaHospedes extends JFrame implements ActionListener {
     if (e.getSource() == btCadastrar) {
         //getContentPane().setLayout(new BorderLayout());
         JPCadastroHospedes painel = new JPCadastroHospedes();
+        JPHospedeComum phc = new JPHospedeComum();
         
-        painel.addSalvarListener(ev -> {
-          //Esse bloco só salva as informações de hospede na persistencia
-          try {
-              HospedePagante hospedeP = constroiHospedePagante(painel);
-              dao.salvar(hospedeP);
-              dao.persistir();
-          } catch (Exception e2) {
-              e2.printStackTrace();
-          }
+        addListenerCadastrar(painel, daoPagante);
+        addListenerCadastrar(phc, daoNormal);
 
-          voltarParaLista();
+        String[] opcoes = {"Hóspede Pagante", "Hóspede Normal"};
+        String escolha = (String) JOptionPane.showInputDialog(
+          this,
+          "Selecione o tipo de hóspede que deseja cadastrar:",
+          "Cadastro",
+          JOptionPane.QUESTION_MESSAGE,
+          null,
+          opcoes,
+          opcoes[0]
+        );
 
-        });
+        if (escolha.equals("Hóspede Pagante")) {
+          abrirPainelCadastro(painel);
+        } else if (escolha.equals ("Hóspede Normal")) {
+          abrirJPHospedeComum(phc);
+        } else {
+          //...
+        }
 
-        painel.addCancelarListener(ev -> {
-            voltarParaLista();
-        });
-
-        //Assim que clicamos no "Cadastrar", executa o código abaixo
-        abrirPainelCadastro(painel);
 
     } else if (e.getSource() == btEditar) {
       JPCadastroHospedes painel = new JPCadastroHospedes();
+      JPHospedeComum phc = new JPHospedeComum();
 
         int linha = tabela.getSelectedRow();
         if (linha == -1) return;
         final int idAntigo = (int) modeloTabela.getValueAt(linha, 0);
         int id = (int) modeloTabela.getValueAt(linha, 0);
         try {
-            HospedePagante h = dao.carregar(id);
-            painel.preencherCampos(h);
-            
-            abrirPainelCadastro(painel);
-
+            String tipo = (String) modeloTabela.getValueAt(linha, 1);
+            if (tipo.equals("Pagante")) {
+              HospedePagante h = daoPagante.carregar(id);
+              painel.preencherCampos(h);
+              abrirPainelCadastro(painel);
+            } else {
+              HospedeNormal hn = daoNormal.carregar(id);
+              phc.preencherCampos(hn);
+              abrirJPHospedeComum(phc);
+            }
         } catch (PersistenceException pe) {
           pe.printStackTrace();
         }
 
-        AdicionarListeners(painel, idAntigo);
+        addOutrosListeners(painel, idAntigo, daoPagante);
+        addOutrosListeners(phc, idAntigo, daoNormal);
 
     } else if (e.getSource() == btApagar) {
         int linha = tabela.getSelectedRow();
         if (linha == -1) return;
 
         int id = (int) modeloTabela.getValueAt(linha, 0);
-        modeloTabela.removeRow(linha);
-
+      
         try {
-            dao.apagar(id);
-            dao.persistir();
+            String tipo = (String) modeloTabela.getValueAt(linha, 1);
+            modeloTabela.removeRow(linha);
+            if (tipo.equals("Pagante")) {
+              daoPagante.apagar(id);
+              daoPagante.persistir();
+            } else {
+              daoNormal.apagar(id);
+              daoNormal.persistir();
+            }
         } catch (PersistenceException f) {
           f.printStackTrace();
         } catch (IOException f1) {
@@ -216,17 +257,35 @@ public class JanelaHospedes extends JFrame implements ActionListener {
 
     } else if (e.getSource() == btBuscar) {
       JPCadastroHospedes painel = new JPCadastroHospedes();
+      JPHospedeComum phc = new JPHospedeComum();
+
       String entrada = JOptionPane.showInputDialog(this, "Digite o ID do hóspede"); 
 
       if (entrada != null) {
         try {
           int id = Integer.parseInt(entrada);
           final int idAntigo = id;
-          HospedePagante hp = dao.carregar(id);
-          painel.preencherCampos(hp);
-          abrirPainelCadastro(painel);
+          int numLinhasTabela = modeloTabela.getRowCount();
+          String tipo = "";
+          //Percorre a tabela buscando o ID. Quando acha, descobre o tipo de Hóspede (Pagante ou Normal)
+          for (int i=0; i<numLinhasTabela; i++) {
+            if ((int)modeloTabela.getValueAt(i, 0) == id) {
+              tipo = (String) modeloTabela.getValueAt(i, 1);
+              break;
+            }
+          }
+          if (tipo.equals("Pagante")) {
+            HospedePagante hp = daoPagante.carregar(id);
+            painel.preencherCampos(hp);
+            abrirPainelCadastro(painel);
+          } else {
+            HospedeNormal hn = daoNormal.carregar(id);
+            phc.preencherCampos(hn);
+            abrirJPHospedeComum(phc);
+          }
 
-          AdicionarListeners(painel, idAntigo);
+          addOutrosListeners(painel, idAntigo, daoPagante);
+          addOutrosListeners(phc, idAntigo, daoNormal);
 
         } catch (NumberFormatException nfe) {
           JOptionPane.showMessageDialog(this, "O ID deve ser um número");
@@ -240,7 +299,6 @@ public class JanelaHospedes extends JFrame implements ActionListener {
   }
 
   //MÉTODOS USADOS NO OVERRIDE ACIMA
-
   private void voltarParaLista() {
     getContentPane().removeAll();
     getContentPane().setLayout(new GridBagLayout());
@@ -252,6 +310,13 @@ public class JanelaHospedes extends JFrame implements ActionListener {
   private void abrirPainelCadastro (JPCadastroHospedes painel) {
     getContentPane().removeAll();
     add(painel);
+    revalidate();
+    repaint();
+  }
+
+  private void abrirJPHospedeComum (JPHospedeComum phc) {
+    getContentPane().removeAll();
+    add(phc);
     revalidate();
     repaint();
   }
@@ -270,36 +335,88 @@ public class JanelaHospedes extends JFrame implements ActionListener {
     );
   }
 
-  private void AdicionarListeners (JPCadastroHospedes painel, int idAntigo) {
+  private <T extends Entidade_1<?>, P extends PainelCadastro<T>> void addListenerCadastrar (P painel, EntidadeDAO<T> dao) {
     painel.addSalvarListener(ev -> {
-      HospedePagante hospedeP = null;
+          //Esse bloco só salva as informações de hospede na persistencia
+          try {
+              T hospede = painel.construirEntidade();
+              if (idJaExiste(hospede.getId(), -1)) {
+                JOptionPane.showMessageDialog(this, "Já existe um hóspede com esse ID.");
+                return;
+              }
+              dao.salvar(hospede);
+              dao.persistir();
+          } catch (Exception e2) {
+              e2.printStackTrace();
+          }
+          voltarParaLista();
+        });
+
+        painel.addCancelarListener(ev -> {
+            voltarParaLista();
+        });
+  }
+
+  private <T extends Entidade_1<?>, P extends PainelCadastro<T>> void addOutrosListeners (P painel, int idAntigo, EntidadeDAO<T> dao) {
+    painel.addSalvarListener(ev -> {
+      T entidade = null; 
       try {
-          hospedeP = constroiHospedePagante(painel);
-          dao.atualizar(hospedeP);
+          entidade = painel.construirEntidade();
+          if (idJaExiste(entidade.getId(), idAntigo)) {
+            JOptionPane.showMessageDialog(this, "Já existe um hóspede com esse ID.");
+            return;
+          }
+          dao.atualizar(entidade);
           dao.persistir();
       } catch (PersistenceException e2) {
-          if (e2.getOperacao().compareTo("atualizar") == 0) {
+          if ("atualizar".equals(e2.getOperacao())) {
             try {
               dao.apagar(idAntigo);
-              dao.salvar(hospedeP);
+              dao.salvar(entidade);
               dao.persistir();
-            } catch (PersistenceException e3) {
+            } catch (PersistenceException | IOException e3) {
               e3.printStackTrace();
-            } catch (IOException e4) {
-              e4.printStackTrace();
             }
           }
-      } catch (IOException e5) {
-        e5.printStackTrace();
+      } catch (IOException e4) {
+        e4.printStackTrace();
       }
       voltarParaLista();
-
     });
-
-    painel.addCancelarListener(ev -> {
-        voltarParaLista();
+    painel.addCancelarListener (ev -> {
+      voltarParaLista();
     });
   }
 
+  public void configuraCoresTabela (JTable tabela) {
+    tabela.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+      @Override
+      public Component getTableCellRendererComponent (
+        JTable tb, Object valor, boolean selecionado, boolean hasFocus, int linha, int coluna) {
+          Component c = super.getTableCellRendererComponent(tb, valor, selecionado, hasFocus, linha, coluna);
+          if (!selecionado) {
+            Object tipo = tb.getValueAt(linha, 1); //Pega o tipo da coluna 1 (oculta)
+            if ("Normal".equals(tipo)) {
+              c.setBackground(Color.gray);
+            } else {
+              c.setBackground(Color.yellow);
+            }
+          }
+          return c;
+        }
+      });
+  }
 
+  private boolean idJaExiste (int id, int idAtualIgnorar) {
+    if (id == idAtualIgnorar) return false;
+    try {
+        daoPagante.carregar(id);
+        return true;
+    } catch (PersistenceException e) {}
+    try {
+        daoNormal.carregar(id);
+        return true;
+    } catch (PersistenceException e) {}
+    return false;
+  }
 }
