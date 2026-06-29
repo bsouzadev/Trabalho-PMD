@@ -4,10 +4,15 @@ import java.time.LocalDate;
 
 public class Tratador {
 
-    JPCadastroHospedes jp;
+    JPCadastroHospedes jp=null;
+    JPHospedeComum jhc = null;
 
     public Tratador (JPCadastroHospedes jp) {
         this.jp = jp;
+    }
+    
+    public Tratador (JPHospedeComum jhc) {
+        this.jhc = jhc;
     }
 
     //Métodos de validação
@@ -45,10 +50,11 @@ public class Tratador {
             return "O ID deve ser um número natural.";
         }
 
+        
         //Trata número do cartão
         if (!jp.getNumCartao().matches("[0-9 ]+")) {
             return "Número do cartão inválido. Use apenas espaço para separar os dígitos.";
-}
+        }
 
         //Trata número de telefone
         String telefone = jp.getTelefone();
@@ -70,9 +76,7 @@ public class Tratador {
         } catch (Exception e){
             return "CVV inválido.";
         }
-
         return null;
-
     }
 
     private String trataVencimento() {

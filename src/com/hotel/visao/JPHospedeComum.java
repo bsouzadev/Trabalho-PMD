@@ -31,7 +31,12 @@ public class JPHospedeComum extends JPanel implements PainelCadastro <HospedeNor
         add (cabecalho(), BorderLayout.NORTH);
         add (corpo (), BorderLayout.CENTER);
         add (barraInferior(), BorderLayout.SOUTH);
-        btnSalvar.addActionListener(ev -> { 
+        btnSalvar.addActionListener(ev -> {
+            String erro = trataCampos();
+            if (erro != null) {
+                JOptionPane.showMessageDialog(this, erro, "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             salvarListeners.forEach(l -> l.actionPerformed(ev));
         });
 
@@ -134,6 +139,76 @@ public class JPHospedeComum extends JPanel implements PainelCadastro <HospedeNor
         barra.add(btnCancelar);
         barra.add(btnSalvar);
         return barra;
+    }
+
+    public String trataCampos () {
+        //Trata nome
+        if (getNome().trim().isEmpty()) {
+            return "O nome é obrigatório.";
+        }
+
+        //Trata CPF
+        if (getCpf().trim().isEmpty()) {
+            return "O CPF é obrigatório.";
+        }
+        if (!validaCPF()) {
+            return "CPF inválido!";
+        }
+        
+        //Trata Idade
+        if (getIdade().trim().isEmpty()) {
+            return "A idade é obrigatória.";
+        }
+        try {
+            int idade = Integer.parseInt(getIdade());
+            if (idade < 0) return "Idade inválida";
+        } catch (NumberFormatException e) {
+            return "A idade deve ser um número.";
+        }
+        
+        //Trata ID
+        try {
+            int id = getId();
+            if (id < 0) return "O ID deve ser um número natural.";
+        } catch (NumberFormatException e) {
+            return "O ID deve ser um número natural.";
+        }
+        return null;
+    }
+
+    private boolean validaCPF () {
+        String texto = getCpf().trim(), cpf = "";
+        boolean digitosIguais = true;
+        int calculo10=0, calculo11=0;
+
+        int tamCpf, tamTexto = texto.length();
+        for (int i=0; i<tamTexto; i++) {
+            char c = texto.charAt(i);
+            if (c >= '0' && c <= '9') cpf += c;
+        }
+        
+        tamCpf = cpf.length();
+        if (tamCpf != 11) return false;
+        calculo10 += 10*(cpf.charAt(0) - '0');
+        calculo11 += 11*(cpf.charAt(0) - '0');
+        for (int i=1; i<tamCpf; i++) {
+            char c = cpf.charAt(i);
+            if (c != cpf.charAt(i-1)) digitosIguais = false;
+            if (i < tamCpf-2) {
+                calculo10 += (10-i) * (c - '0');
+                calculo11 += (11-i) * (c - '0');
+            }
+        }
+        
+        if (digitosIguais) return false;
+        calculo10%=11;
+        calculo10 = (calculo10 == 0 || calculo10 == 1) ? 0 : 11-calculo10;
+        calculo11 += calculo10*2;
+        calculo11%=11;
+        calculo11 = (calculo11 == 0 || calculo11 == 1) ? 0 : 11-calculo11;
+
+        return (calculo10 == (cpf.charAt(9) - '0') && calculo11 == (cpf.charAt(10) - '0'));
+
     }
 
     //GETTERS

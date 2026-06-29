@@ -119,9 +119,9 @@ public class JanelaHospedes extends JFrame implements ActionListener {
     tabela.setFont(fonte);
     tabela.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     tabela.getColumnModel().getColumn(0).setPreferredWidth(60);
-    tabela.getColumnModel().getColumn(1).setPreferredWidth(0); //
-    tabela.getColumnModel().getColumn(1).setMinWidth(0); //Oculta a informação do tipo de hóspede na tabela visual
-    tabela.getColumnModel().getColumn(1).setMaxWidth(0); //
+    tabela.getColumnModel().getColumn(1).setPreferredWidth(100); //
+    //tabela.getColumnModel().getColumn(1).setMinWidth(0); //Oculta a informação do tipo de hóspede na tabela visual
+    //tabela.getColumnModel().getColumn(1).setMaxWidth(0); //
     tabela.getColumnModel().getColumn(2).setPreferredWidth(300);
     tabela.getColumnModel().getColumn(3).setPreferredWidth(200);
     tabela.getColumnModel().getColumn(4).setPreferredWidth(100);
@@ -159,8 +159,12 @@ public class JanelaHospedes extends JFrame implements ActionListener {
               hp.getCvv()
           });
       }
-      
-      for (HospedeNormal hn : daoNormal.carregarTodos()) {
+    }catch (PersistenceException e) {
+      //e.printStackTrace();
+    }
+
+    try {
+        for (HospedeNormal hn : daoNormal.carregarTodos()) {
         modeloTabela.addRow(new Object[]{
             hn.getId(),
             "Normal",
@@ -170,9 +174,9 @@ public class JanelaHospedes extends JFrame implements ActionListener {
         });
 
       }
-    }catch (PersistenceException e) {
-      //vazio
-  }
+    } catch (PersistenceException e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
@@ -397,11 +401,11 @@ public class JanelaHospedes extends JFrame implements ActionListener {
           if (!selecionado) {
             Object tipo = tb.getValueAt(linha, 1); //Pega o tipo da coluna 1 (oculta)
             if ("Normal".equals(tipo)) {
-              c.setBackground(Color.gray);
+              c.setBackground(new Color(220, 240, 255));
             } else {
               c.setBackground(Color.yellow);
             }
-          }
+          } 
           return c;
         }
       });
