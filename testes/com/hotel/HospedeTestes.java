@@ -158,7 +158,7 @@ public class HospedeTestes {
     }
 
      @Test
-    public void testarAapagarHospede_2() throws Exception {
+    public void testarApagarHospede_2() throws Exception {
 
         assertThrows(PersistenceException.class, () -> {dao.apagar(1);});
 
