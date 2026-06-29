@@ -93,22 +93,28 @@ public class EntidadeDAO <E extends Entidade_1<?>> {
         return vet;
     }*/
 
-         public ArrayList<E> carregarTodos() throws PersistenceException {
+    public ArrayList<E> carregarTodos() throws PersistenceException {
 
-    ArrayList<E> lista = new ArrayList<>(setObjetos);
+        ArrayList<E> lista = new ArrayList<>(setObjetos);
 
-    if (lista.isEmpty()) {
-        throw new PersistenceException(
-                "carregarTodos",
-                "Conjunto vazio.",
-                lista
-        );
+        if (lista.isEmpty()) {
+            throw new PersistenceException(
+                    "carregarTodos",
+                    "Conjunto vazio.",
+                    lista
+            );
+        }
+
+        Collections.sort(lista);
+
+        return lista;
     }
 
-    Collections.sort(lista);
+    public void limpar() {
 
-    return lista;
-}
+        setObjetos.clear();
+    
+    }
 
     public void persistir() throws IOException {
 

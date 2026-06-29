@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -248,8 +249,9 @@ public class JanelaQuartos extends JFrame implements ActionListener {
           tabela.clearSelection();
        
         }catch (NumberFormatException ex) {
-          System.out.println("\u001B[31mInformação em formato incorreto.\u001B[0m");
+          JOptionPane.showMessageDialog(this, "Informação em formato impróprio.");
         }catch (Exception ex2){
+          JOptionPane.showMessageDialog(this, "ID já existente");
           ex2.printStackTrace();
         }
     }else if (e.getSource() == btal) {
@@ -280,8 +282,9 @@ public class JanelaQuartos extends JFrame implements ActionListener {
           tabela.clearSelection();
 
         } catch (NumberFormatException ex ) {
-          System.out.println("\u001B[31mInformação em formato incorreto.\u001B[0m");
+          JOptionPane.showMessageDialog(this, "Informação em formato impróprio.");
         } catch (Exception ex2){
+          JOptionPane.showMessageDialog(this, "ID já existente");
           ex2.printStackTrace();
         }
       }
@@ -322,7 +325,7 @@ public class JanelaQuartos extends JFrame implements ActionListener {
             }
         }
     }catch(Exception ex){
-        ex.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Não existe hóspede com esse ID");
     }
 
     }
