@@ -166,7 +166,6 @@ public class JanelaHospedes extends JFrame implements ActionListener {
     }
 
     try {
-      System.out.println("daoNormal antes do loop: " + daoNormal + " | tamanho: " + daoNormal.carregarTodos().size());
         for (HospedeNormal hn : daoNormal.carregarTodos()) {
         modeloTabela.addRow(new Object[]{
             hn.getId(),

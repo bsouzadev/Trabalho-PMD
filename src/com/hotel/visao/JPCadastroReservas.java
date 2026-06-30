@@ -105,6 +105,10 @@ public class JPCadastroReservas extends JPanel implements PainelCadastro<Reserva
 
         dataEntrada = LocalDate.parse(entrada, fmt);
         dataSaida = LocalDate.parse(saida, fmt);
+        if (!quartoDisponivel(quarto, dataEntrada, dataSaida)) {
+            JOptionPane.showMessageDialog(this, "Esse quarto já está reservado no período escolhido.");
+            return;
+        }
         InformacoesReserva info = new InformacoesReserva(quarto, dataEntrada, dataSaida);
         infoAcumulada.add(info);
         modeloQuartos.addRow(new Object[]{
@@ -272,6 +276,26 @@ public class JPCadastroReservas extends JPanel implements PainelCadastro<Reserva
         }
 
         return null;
+    }
+
+    private boolean quartoDisponivel(Quarto quarto, LocalDate entrada, LocalDate saida) {
+
+        try {
+            for (Reserva reserva : daoReserva.carregarTodos()) {
+                if (reserva.getId() == idAntigo) continue;
+                for (InformacoesReserva info : reserva.getInfoReserva()) {
+                    if (!(info.getQuarto().getId() == quarto.getId())) continue; //compara os ids, buscando o quarto em questão
+
+                    LocalDate entradaExistente = info.getData_entrada();
+                    LocalDate saidaExistente = info.getData_saida();
+                    if (entrada.isBefore(saidaExistente) && saida.isAfter(entradaExistente)) return false;
+                }
+            }
+
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 
     //GETTERS

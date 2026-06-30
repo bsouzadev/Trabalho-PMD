@@ -195,166 +195,166 @@ public class HospedeTestes {
     
 }
 
-package testes.com.hotel;
+// package testes.com.hotel;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import src.com.hotel.modelo.Quarto;
-import src.com.hotel.persistencia.EntidadeDAO;
-import src.com.hotel.persistencia.GaranteDAO;
-import src.com.hotel.persistencia.PersistenceException;
+// import static org.junit.jupiter.api.Assertions.assertEquals;
+// import static org.junit.jupiter.api.Assertions.assertThrows;
+// import org.junit.jupiter.api.BeforeEach;
+// import org.junit.jupiter.api.Test;
+// import src.com.hotel.modelo.Quarto;
+// import src.com.hotel.persistencia.EntidadeDAO;
+// import src.com.hotel.persistencia.GaranteDAO;
+// import src.com.hotel.persistencia.PersistenceException;
 
 
-public class QuartosTestes {
+// public class QuartosTestes {
      
-    private EntidadeDAO<Quarto> dao;
+//     private EntidadeDAO<Quarto> dao;
 
-    @BeforeEach
-    public void inicializar() throws Exception {
+//     @BeforeEach
+//     public void inicializar() throws Exception {
 
-        dao = GaranteDAO.getDAO(Quarto.class);
+//         dao = GaranteDAO.getDAO(Quarto.class);
 
-        dao.limpar();
+//         dao.limpar();
 
-    }
+//     }
 
-    @Test
-    public void testarSalvarQuarto_1() throws PersistenceException {
+//     @Test
+//     public void testarSalvarQuarto_1() throws PersistenceException {
 
-        Quarto quarto = new Quarto(
-                0,
-                "Deluxe",
-                5000.00,
-                0
-        );
+//         Quarto quarto = new Quarto(
+//                 0,
+//                 "Deluxe",
+//                 5000.00,
+//                 0
+//         );
     
-        dao.salvar(quarto);
+//         dao.salvar(quarto);
         
-        Quarto carregado = dao.carregar(0);
+//         Quarto carregado = dao.carregar(0);
 
-        assertEquals(quarto, carregado);
-    }
+//         assertEquals(quarto, carregado);
+//     }
 
-     @Test
-    public void testarSalvarQuarto_2() throws PersistenceException {
+//      @Test
+//     public void testarSalvarQuarto_2() throws PersistenceException {
 
-        Quarto quarto = new Quarto(
-                0,
-                "Deluxe",
-                5000.00,
-                0
-        );
+//         Quarto quarto = new Quarto(
+//                 0,
+//                 "Deluxe",
+//                 5000.00,
+//                 0
+//         );
 
-        dao.salvar(quarto);
+//         dao.salvar(quarto);
 
-        Quarto quarto_2 = new Quarto(
-                0,
-                "Deluxe",
-                5000.00,
-                0
-        );
+//         Quarto quarto_2 = new Quarto(
+//                 0,
+//                 "Deluxe",
+//                 5000.00,
+//                 0
+//         );
 
-        assertThrows(PersistenceException.class, () -> {dao.salvar(quarto_2);});
-
-        
-    }
-
-     @Test
-    public void testarAtualizarQuarto_1() throws PersistenceException {
-
-        Quarto quarto = new Quarto(
-                0,
-                "Deluxe",
-                5000.00,
-                0
-        );
-
-        dao.salvar(quarto);
-
-        Quarto quarto_2 = new Quarto(
-                1,
-                "Standard",
-                2500.00,
-                0
-        );
-
-        dao.atualizar(quarto_2);
-
-        Quarto carregado = dao.carregar(0);
-
-        assertEquals(quarto_2, carregado);
-    }
-
-     @Test
-    public void testarAtualizarQuarto_2() throws Exception {
-
-        Quarto quarto = new Quarto(
-                2,
-                "Deluxe",
-                5000.0,
-                5
-        );
-
-        assertThrows(PersistenceException.class, () -> {dao.atualizar(quarto);});
+//         assertThrows(PersistenceException.class, () -> {dao.salvar(quarto_2);});
 
         
-    }
+//     }
 
-     @Test
-    public void testarApagarQuarto_1() throws PersistenceException {
+//      @Test
+//     public void testarAtualizarQuarto_1() throws PersistenceException {
 
-        Quarto quarto = new Quarto(
-                0,
-                "Deluxe",
-                5000.00,
-                0
-        );
-    
-        dao.salvar(quarto);
+//         Quarto quarto = new Quarto(
+//                 0,
+//                 "Deluxe",
+//                 5000.00,
+//                 0
+//         );
 
-        dao.apagar(0);
+//         dao.salvar(quarto);
 
-        assertThrows(PersistenceException.class, () -> {dao.carregar(0);});
+//         Quarto quarto_2 = new Quarto(
+//                 1,
+//                 "Standard",
+//                 2500.00,
+//                 0
+//         );
+
+//         dao.atualizar(quarto_2);
+
+//         Quarto carregado = dao.carregar(0);
+
+//         assertEquals(quarto_2, carregado);
+//     }
+
+//      @Test
+//     public void testarAtualizarQuarto_2() throws Exception {
+
+//         Quarto quarto = new Quarto(
+//                 2,
+//                 "Deluxe",
+//                 5000.0,
+//                 5
+//         );
+
+//         assertThrows(PersistenceException.class, () -> {dao.atualizar(quarto);});
+
         
-    }
+//     }
 
-     @Test
-    public void testarApagarQuarto_2() throws Exception {
+//      @Test
+//     public void testarApagarQuarto_1() throws PersistenceException {
 
-        assertThrows(PersistenceException.class, () -> {dao.apagar(1);});
-
-    }
-
-     @Test
-    public void testarCarregarQuarto_1() throws PersistenceException {
-
-        Quarto quarto = new Quarto(
-                0,
-                "Deluxe",
-                5000.00,
-                0
-        );
+//         Quarto quarto = new Quarto(
+//                 0,
+//                 "Deluxe",
+//                 5000.00,
+//                 0
+//         );
     
-        dao.salvar(quarto);
+//         dao.salvar(quarto);
 
-        Quarto carregado = dao.carregar(0);
+//         dao.apagar(0);
 
-        assertEquals(quarto, carregado);
-    }
+//         assertThrows(PersistenceException.class, () -> {dao.carregar(0);});
+        
+//     }
+
+//      @Test
+//     public void testarApagarQuarto_2() throws Exception {
+
+//         assertThrows(PersistenceException.class, () -> {dao.apagar(1);});
+
+//     }
+
+//      @Test
+//     public void testarCarregarQuarto_1() throws PersistenceException {
+
+//         Quarto quarto = new Quarto(
+//                 0,
+//                 "Deluxe",
+//                 5000.00,
+//                 0
+//         );
     
-    @Test
-    public void testarCarregarQuarto_2() throws Exception {
+//         dao.salvar(quarto);
 
-        assertThrows(PersistenceException.class, () -> {dao.carregar(1);});
-    }
+//         Quarto carregado = dao.carregar(0);
 
-
-}
-
-package testes.com.hotel;
-
-public class ReservasTestes {
+//         assertEquals(quarto, carregado);
+//     }
     
-}
+//     @Test
+//     public void testarCarregarQuarto_2() throws Exception {
+
+//         assertThrows(PersistenceException.class, () -> {dao.carregar(1);});
+//     }
+
+
+// }
+
+// package testes.com.hotel;
+
+// public class ReservasTestes {
+    
+// }
