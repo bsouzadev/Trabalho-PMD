@@ -66,20 +66,19 @@ public class HospedePagante extends Hospede{
         this.email = email;
     }
 
-
-     @Override
-    public String toString() {
+    //  @Override
+    // public String toString() {
         
-        return String.format(
-        "%s\nCartão: %s\nCVV: %d\nVencimento: %s\nTelefone: %s\nEmail: %s\n",
-        super.toString(),
-        numero_cartao,
-        cvv,
-        data_vencimento,
-        telefone,
-        email
-    );
+    //     return String.format(
+    //     "%s\nCartão: %s\nCVV: %d\nVencimento: %s\nTelefone: %s\nEmail: %s\n",
+    //     super.toString(),
+    //     numero_cartao,
+    //     cvv,
+    //     data_vencimento,
+    //     telefone,
+    //     email
+    // );
         
-    }
+    // }
     
 }

@@ -60,7 +60,7 @@ public abstract class Entidade_1 <T extends Entidade_1<T>> implements Serializab
 
 public String toString() {
     
-    return "ID: " + this.id + "\n";
+    return this.id + " - ";
 }
 
 // ================================ Sobrescrevendo o hashcode para funcionar na classe EntidadeDAO ====================//

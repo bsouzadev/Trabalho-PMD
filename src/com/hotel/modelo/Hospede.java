@@ -51,11 +51,7 @@ public abstract class Hospede extends Entidade_1<Hospede> implements Serializabl
     @Override
     public String toString() {
 
-        return super.toString() + "\n" +
-           "Nome: " + nome + "\n" +
-           "Idade: " + idade + "\n" +
-           "CPF: " + cpf;
-
+        return super.toString() + nome;
     
     }
 }

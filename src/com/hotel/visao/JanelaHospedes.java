@@ -14,7 +14,6 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import src.com.hotel.modelo.Entidade_1;
@@ -29,7 +28,6 @@ public class JanelaHospedes extends JFrame implements ActionListener {
 
     private EntidadeDAO <HospedePagante> daoPagante;
     private EntidadeDAO <HospedeNormal> daoNormal;
-    private JTextField tfNome, tfCpf, tfIdade;
     private JButton btCadastrar, btEditar, btApagar, btBuscar;
     private DefaultTableModel modeloTabela;
     private JTable tabela;
@@ -45,8 +43,12 @@ public class JanelaHospedes extends JFrame implements ActionListener {
 
     try {
       daoPagante.recuperar();
+    } catch (IOException | ClassNotFoundException e) {
+      e.printStackTrace();
+    }
+    try {
       daoNormal.recuperar();
-    } catch (Exception e) {
+    } catch (IOException | ClassNotFoundException e) {
       e.printStackTrace();
     }
 
@@ -164,6 +166,7 @@ public class JanelaHospedes extends JFrame implements ActionListener {
     }
 
     try {
+      System.out.println("daoNormal antes do loop: " + daoNormal + " | tamanho: " + daoNormal.carregarTodos().size());
         for (HospedeNormal hn : daoNormal.carregarTodos()) {
         modeloTabela.addRow(new Object[]{
             hn.getId(),
@@ -341,20 +344,19 @@ public class JanelaHospedes extends JFrame implements ActionListener {
 
   private <T extends Entidade_1<?>, P extends PainelCadastro<T>> void addListenerCadastrar (P painel, EntidadeDAO<T> dao) {
     painel.addSalvarListener(ev -> {
-          //Esse bloco só salva as informações de hospede na persistencia
-          try {
-              T hospede = painel.construirEntidade();
-              if (idJaExiste(hospede.getId(), -1)) {
+        try {
+            T hospede = painel.construirEntidade();
+            if (idJaExiste(hospede.getId(), -1)) {
                 JOptionPane.showMessageDialog(this, "Já existe um hóspede com esse ID.");
                 return;
-              }
-              dao.salvar(hospede);
-              dao.persistir();
-          } catch (Exception e2) {
-              e2.printStackTrace();
-          }
-          voltarParaLista();
-        });
+            }
+            dao.salvar(hospede);
+            dao.persistir();
+        } catch (Exception e2) {
+            e2.printStackTrace();
+        }
+        voltarParaLista();
+    });
 
         painel.addCancelarListener(ev -> {
             voltarParaLista();

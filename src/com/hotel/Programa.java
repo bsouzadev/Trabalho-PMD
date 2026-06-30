@@ -8,4 +8,3 @@ public class Programa {
         janela.setVisible(true);
     }
 }
-

@@ -7,5 +7,9 @@ public class HospedeNormal extends Hospede{
         super(nome, idade, cpf, id);
     }
 
-    
+    @Override
+    public String toString () {
+        return super.toString();
+    }
+
 }

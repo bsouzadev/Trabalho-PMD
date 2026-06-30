@@ -1,10 +1,11 @@
 package src.com.hotel.modelo;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
-public class InformacoesReserva {
+public class InformacoesReserva implements Serializable{
     protected Quarto quarto;
     protected LocalDate data_entrada;
     protected LocalDate data_saida;
