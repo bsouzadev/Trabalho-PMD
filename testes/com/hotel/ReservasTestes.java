@@ -42,7 +42,7 @@ public class ReservasTestes {
         );
 
         Reserva reserva = new Reserva (hospede, 0);
-    
+
         dao.salvar(reserva);
         
         Reserva carregado = dao.carregar(0);
@@ -200,6 +200,5 @@ public class ReservasTestes {
 
         assertThrows(PersistenceException.class, () -> {dao.carregar(1);});
     }
-
 
 }

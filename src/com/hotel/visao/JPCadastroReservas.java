@@ -68,6 +68,11 @@ public class JPCadastroReservas extends JPanel implements PainelCadastro<Reserva
         } catch (Exception e) {
             e.printStackTrace();
         }
+        try {
+            daoReserva.recuperar();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         add (cabecalho(), BorderLayout.NORTH);
         add (corpo (), BorderLayout.CENTER);
         add (barraInferior(), BorderLayout.SOUTH);
@@ -134,6 +139,26 @@ public class JPCadastroReservas extends JPanel implements PainelCadastro<Reserva
         modeloQuartos.removeRow(linha);
     }
 
+     private boolean quartoDisponivel(Quarto quarto, LocalDate entrada, LocalDate saida) {
+
+        try {
+            for (Reserva reserva : daoReserva.carregarTodos()) {
+                if (reserva.getId() == idAntigo) continue;
+                for (InformacoesReserva info : reserva.getInfoReserva()) {
+                    if (!(info.getQuarto().getId() == quarto.getId())) continue; //compara os ids, buscando o quarto em questão
+
+                    LocalDate entradaExistente = info.getData_entrada();
+                    LocalDate saidaExistente = info.getData_saida();
+                    if (entrada.isBefore(saidaExistente) && saida.isAfter(entradaExistente)) return false;
+                }
+            }
+
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
     public JPanel cabecalho () {
         JPanel header = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         JLabel headerText = new JLabel("CADASTRO DE RESERVA");
@@ -163,6 +188,8 @@ public class JPCadastroReservas extends JPanel implements PainelCadastro<Reserva
         // Campo Hóspede
         cbHospede = new JComboBox<>();
         cbHospede.setFont(fonte);
+        cbHospede.setPreferredSize(new Dimension(550, 30));
+        cbHospede.setMaximumSize(new Dimension (550, 30));
         try {
             for (HospedePagante hp : daoPagante.carregarTodos()) {
                 cbHospede.addItem(hp);
@@ -186,6 +213,8 @@ public class JPCadastroReservas extends JPanel implements PainelCadastro<Reserva
         body.add(new JLabel("Quarto:"), gbc);
         cbQuarto = new JComboBox<>();
         cbQuarto.setFont(fonte);
+        cbQuarto.setPreferredSize(new Dimension(550, 30));
+        cbQuarto.setMaximumSize(new Dimension (550, 30));
         try {
             for (Quarto q : daoQuarto.carregarTodos()) {
                 cbQuarto.addItem(q);
