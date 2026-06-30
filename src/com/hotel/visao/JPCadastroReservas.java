@@ -111,7 +111,7 @@ public class JPCadastroReservas extends JPanel implements PainelCadastro<Reserva
             quarto.getNumero_quarto(),
             entrada,
             saida,
-            info.valorTotal()
+            info.valorTotal() + " R$"
         });
 
         // limpa campos para próxima entrada
@@ -175,12 +175,11 @@ public class JPCadastroReservas extends JPanel implements PainelCadastro<Reserva
         gbc.gridx = 1;
         body.add(cbHospede, gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        gbc.gridwidth = 2;
-        body.add(new JLabel("Adicionar quarto à reserva"), gbc);
-
         // Campo Quarto
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.gridwidth = 1;
+        body.add(new JLabel("Quarto:"), gbc);
         cbQuarto = new JComboBox<>();
         cbQuarto.setFont(fonte);
         try {
@@ -189,11 +188,6 @@ public class JPCadastroReservas extends JPanel implements PainelCadastro<Reserva
             }
         } catch (PersistenceException e) {}
         cbQuarto.setSelectedIndex(-1);
-
-        gbc.gridx = 0;
-        gbc.gridy = 4;
-        gbc.gridwidth = 1;
-        body.add(new JLabel("Quarto:"), gbc);
         gbc.gridx = 1;
         body.add(cbQuarto, gbc);
 
@@ -297,13 +291,14 @@ public class JPCadastroReservas extends JPanel implements PainelCadastro<Reserva
         //Carrega os quartos já existentes na tabela
         infoAcumulada.clear();
         modeloQuartos.setRowCount(0);
+        DateTimeFormatter dtf= DateTimeFormatter.ofPattern("dd/MM/yyyy");
         for (InformacoesReserva info : r.getInfoReserva()) {
             infoAcumulada.add(info);
             modeloQuartos.addRow(new Object [] {
                 info.getQuarto().getNumero_quarto(),
-                info.getData_entrada(),
-                info.getData_saida(),
-                info.valorTotal()
+                info.getData_entrada().format(dtf),
+                info.getData_saida().format(dtf),
+                info.valorTotal() + " R$"
             });
         }
     }
